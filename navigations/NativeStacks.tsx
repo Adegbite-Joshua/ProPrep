@@ -12,9 +12,10 @@ const NativeStacks = () => {
     <Tab.Navigator screenOptions={{
       headerShown: false
     }}>
-        <Tab.Screen name='Landing' component={BottomTabs} />
+        <Tab.Screen name='Landing' component={Landing} />
         <Tab.Screen name='CreateAccount' component={CreateAccount} />
         <Tab.Screen name='SignIn' component={SignIn} />
+        <Tab.Screen name='BottomTabs' component={BottomTabs} />
     </Tab.Navigator>
   )
 }
