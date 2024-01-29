@@ -7,10 +7,10 @@ import Input from '../components/Forms/Input';
 const CreateAccount = ({navigation}) => {
   // State to hold user input
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phoneNumber: '',
+    password: '',
     level: '',
     department: '',
   });
@@ -22,56 +22,46 @@ const CreateAccount = ({navigation}) => {
   return (
     <SafeAreaView className='flex-1 p-4'>
       <Text className='text-2xl font-bold mb-4'>Register</Text>
-
       <Text>Enter Your Details to Register</Text>
+      
+      <Input 
+        label='Full Name'
+        error='Input full name'        
+        value={formData.name}
+        password={false}
+        iconName='person'
+        onChangeText={setFormData}
+        />
+      <Input 
+        label='Password'
+        error='Input password'        
+        value={formData.password}
+        password={true}
+        iconName='person'
+        onChangeText={setFormData}
+        />
       <Input 
         label='Email'
-        error='Input email'/>
-      <TextInput
-        className='input'
-        placeholder="First Name"
-        value={formData.firstName}
-        onChangeText={(text) => setFormData({ ...formData, firstName: text })}
-      />
-
-      <TextInput
-        className='input'
-        placeholder="Last Name"
-        value={formData.lastName}
-        onChangeText={(text) => setFormData({ ...formData, lastName: text })}
-      />
-
-      <TextInput
-        className='input'
-        placeholder="Email"
+        error='Input email'
         keyboardType="email-address"
         value={formData.email}
-        onChangeText={(text) => setFormData({ ...formData, email: text })}
-      />
-
-      <TextInput
+        password={false}
+        iconName='email'
+        onChangeText={(text: string) => setFormData({ ...formData, email: text })}
+        />
+      <Input 
+        label='Phone Number'
+        error='Input phone number'
         className='input'
-        placeholder="Phone Number"
+        placeholder="+234700000000"
         keyboardType="phone-pad"
         value={formData.phoneNumber}
-        onChangeText={(text) => setFormData({ ...formData, phoneNumber: text })}
-      />
+        password={false}
+        iconName='email'
+        onChangeText={(text: string) => setFormData({ ...formData, phoneNumber: text })}
+        />
 
-      <TextInput
-        className='input'
-        placeholder="Level"
-        value={formData.level}
-        onChangeText={(text) => setFormData({ ...formData, level: text })}
-      />
 
-      <TextInput
-        className='input'
-        placeholder="Department"
-        value={formData.department}
-        onChangeText={(text) => setFormData({ ...formData, department: text })}
-      />
-
-      {/* Button to submit the form */}
       <TouchableOpacity className='bg-blue-500 p-3 rounded-md mt-4' onPress={handleCreateAccount}>
         <Text className='text-white text-center'>Create Account</Text>
       </TouchableOpacity>
