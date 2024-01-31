@@ -1,6 +1,6 @@
 // Import necessary components from React Native and Tailwind CSS
 import React, { useState } from 'react';
-import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, View } from 'react-native';
+import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, View, Image } from 'react-native';
 import Input from '../components/Forms/Input';
 import LevelSelection from '../components/Forms/LevelSelection';
 import DepartmentSelection from '../components/Forms/SelectDepartment';
@@ -69,10 +69,10 @@ const CreateAccount = ({ navigation }) => {
   // }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeAreaView className='flex-1 py-4'>
       {loading && <Loader text='Loading...' />}
       <View className='flex-1 p-4'>
-        <Text className='text-2xl font-bold mb-4'>Register</Text>
+        <Text className='text-2xl font-bold mb-4'>ProPrep - Register</Text>
         <Text>Enter Your Details to Register</Text>
         <ScrollView>
           <Input
@@ -123,14 +123,24 @@ const CreateAccount = ({ navigation }) => {
             onValueChange={(text: string) => handleChange(text, 'level')} />
           <DepartmentSelection
             onValueChange={(text: string) => handleChange(text, 'level')} />
+
+
+          <TouchableOpacity className='bg-purple-500 p-3 rounded-md mt-24' onPress={handleCreateAccount}>
+            <Text className='text-white text-center'>Create Account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className='bg-purple-500 rounded-md mt-4 flex flex-row justify-center items-center' onPress={()=>{}}>
+            <Image source={require('../assets/google-icon.png')} className='h-16 w-16' />
+            <Text className='text-white text-center'>Continue With Google</Text>
+          </TouchableOpacity>
+          <View className='flex flex-row justify-center my-5'>
+            <Text>New user?</Text>
+            <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Sign in</Text>
+          </View>
+
         </ScrollView>
 
 
-        <TouchableOpacity className='bg-blue-500 p-3 rounded-md mt-4' onPress={handleCreateAccount}>
-          <Text className='text-white text-center'>Create Account</Text>
-        </TouchableOpacity>
-        <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Create account</Text>
-        <Text className='text-blue-500' onPress={() => navigation.navigate('CreateAccount')}>Create account</Text>
+
       </View>
     </SafeAreaView>
   );
