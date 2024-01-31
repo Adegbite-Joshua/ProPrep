@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Select, Center, Box } from "native-base";
-import { FontAwesome } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SelectList } from "react-native-dropdown-select-list";
@@ -37,11 +35,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const LevelSelection = ({ onValueChange }) => {
+const DepartmentSelection = ({ onValueChange }) => {
 
   const [items, setItems] = useState([
     {value: '100 Level', key: '100'},
-    {value: '200 Level', key: '200', disabled: true},
+    {value: 'Agric', key: '200', disabled: true},
     {value: '300 Level', key: '300', disabled: true},
     {value: '400 Level', key: '400', disabled: true},
     {value: '500 Level', key: '500', disabled: true},
@@ -49,7 +47,7 @@ const LevelSelection = ({ onValueChange }) => {
 
   return (
     <View style={styles.container}>
-      <Text className='self-start'>Select Level:</Text>
+      <Text className='self-start'>Select Department:</Text>
       <SelectList 
         boxStyles={styles.input}
         setSelected={onValueChange}
@@ -60,4 +58,4 @@ const LevelSelection = ({ onValueChange }) => {
   );
 };
 
-export default LevelSelection;
+export default DepartmentSelection;
