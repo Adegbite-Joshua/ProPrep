@@ -1,13 +1,16 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
+import { useColorScheme } from 'react-native'
 import React from 'react'
-import BottomTabs from './BottomTabs'
-import NativeStacks from './NativeStacks'
+import DrawerTab from './DrawerTab'
 
 
 const Navigations = () => {
+  const currentScheme = useColorScheme();
   return (
-    <NavigationContainer>
-        <NativeStacks/>
+    <NavigationContainer theme={currentScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <StatusBar style='auto' />
+        <DrawerTab/>
     </NavigationContainer>
   )
 }

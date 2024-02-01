@@ -64,10 +64,6 @@ const CreateAccount = ({ navigation }) => {
     }
   };
 
-  // if (loading) {
-  //   return <Loader text='Loading...'/>
-  // }
-
   return (
     <SafeAreaView className='flex-1 py-4'>
       {loading && <Loader text='Loading...' />}
