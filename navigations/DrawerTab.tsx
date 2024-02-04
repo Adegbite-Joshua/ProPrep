@@ -9,8 +9,7 @@ const DrawerTab = () => {
   return (
     <Drawer.Navigator>
         <Drawer.Screen name='NativeStacks' component={NativeStacks} options={{drawerLabel: 'Dashboard'}} />
-        <Button title='Update Offline Questions' onPress={()=>console.log('Update clicked')} />
-        
+        <Button title='Update Offline Questions' onPress={()=>console.log('Update clicked')} />        
     </Drawer.Navigator>
   )
 }

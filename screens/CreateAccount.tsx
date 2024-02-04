@@ -70,7 +70,7 @@ const CreateAccount = ({ navigation }) => {
       <View className='flex-1 p-4'>
         <Text className='text-2xl font-bold mb-4'>ProPrep - Register</Text>
         <Text>Enter Your Details to Register</Text>
-        <ScrollView>
+        <ScrollView className=''>
           <Input
             label='Full Name'
             error={errors.fullName}
@@ -80,17 +80,6 @@ const CreateAccount = ({ navigation }) => {
             className='px-1'
             onFocus={() => handleError(null, 'fullName')}
             onChangeText={(text: string) => handleChange(text, 'fullName')}
-          />
-          <Input
-            label='Password'
-            placeholder='Password'
-            error={errors.password}
-            value={formData.password}
-            password={true}
-            iconName='user-o'
-            className='px-1'
-            onFocus={() => handleError(null, 'password')}
-            onChangeText={(text: string) => handleChange(text, 'password')}
           />
           <Input
             label='Email'
@@ -103,6 +92,17 @@ const CreateAccount = ({ navigation }) => {
             onFocus={() => handleError(null, 'email')}
             onChangeText={(text: string) => handleChange(text, 'email')}
           />
+          <Input
+            label='Password'
+            placeholder='Password'
+            error={errors.password}
+            value={formData.password}
+            password={true}
+            iconName='user-o'
+            className='px-1'
+            onFocus={() => handleError(null, 'password')}
+            onChangeText={(text: string) => handleChange(text, 'password')}
+          />          
           <Input
             label='Phone Number'
             error={errors.phoneNumber}

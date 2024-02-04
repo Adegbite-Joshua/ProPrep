@@ -6,8 +6,3 @@ module.exports = {
     plugins: [],
 }
 
-// "splash": {
-//     "image": "./assets/splash.png",
-//     "resizeMode": "contain",
-//     "backgroundColor": "#ffffff"
-//   },

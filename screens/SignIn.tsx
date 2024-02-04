@@ -34,6 +34,7 @@ const SignIn = ({ navigation }) => {
     console.log('Form data submitted:', formData);
     Keyboard.dismiss();
     let validDetails = true;
+    setTimeout(() => navigation.navigate('BottomTabs', { screen: 'Dashboard' }), 2000)
     if (!formData.email) {
       handleError('Input your email', 'email')
       validDetails = false;
@@ -51,14 +52,14 @@ const SignIn = ({ navigation }) => {
     <SafeAreaView className='flex-1 p-4'>
       <Text className='text-2xl font-bold mb-4'>Register</Text>
       <Text>Enter Your Details to Register</Text>
-      <ScrollView>
+      <ScrollView className=''>
         <Input
           label='Email'
           error={errors.email}
           keyboardType="email-address"
           value={formData.email}
           password={false}
-          iconName='email'
+          iconName='envelope-o'
           className='px-1'
           onFocus={() => handleError(null, 'email')}
           onChangeText={(text: string) => handleChange(text, 'email')}
@@ -69,7 +70,7 @@ const SignIn = ({ navigation }) => {
           error={errors.password}
           value={formData.password}
           password={true}
-          iconName='email'
+          iconName='user-o'
           className='px-1'
           onFocus={() => handleError(null, 'password')}
           onChangeText={(text: string) => handleChange(text, 'password')}
@@ -77,14 +78,15 @@ const SignIn = ({ navigation }) => {
         <LevelSelection
           onValueChange={(text: string) => handleChange(text, 'level')} />
 
-        <TouchableOpacity className='bg-blue-500 p-3 rounded-md mt-4' onPress={() => navigation.navigate('Dashboard')}>
+        
+      </ScrollView>
+      <TouchableOpacity className='bg-blue-500 p-3 rounded-md mt-auto' onPress={() => handleSignIn()}>
           <Text className='text-white text-center'>Sign In</Text>
         </TouchableOpacity>
         <View className='flex flex-row gap-x-3'>
           <Text>Don't have an account?</Text>
           <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Create account</Text>
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
