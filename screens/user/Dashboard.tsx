@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image } from 'react-native'
+import { View, Text, SafeAreaView, Image, Pressable } from 'react-native'
 import React, { Fragment } from 'react'
 
 const Dashboard = () => {
@@ -15,26 +15,26 @@ const Dashboard = () => {
       <View>
         <Text className='my-3 font-bold'>Top Courses</Text>
         <View className='flex flex-row flex-wrap'>
-          <View className='w-1/3 p-2'>
+          <Pressable className='w-1/3 p-2'>
             <Image source={require('../../assets/google-icon.png')} className='w-24 h-24 rounded-lg' />
             <Text className='text-center'>MTH101</Text>
-          </View>
-          <View className='w-1/3 p-2'>
+          </Pressable>
+          <Pressable className='w-1/3 p-2'>
             <Image source={require('../../assets/google-icon.png')} className='w-24 h-24 rounded-lg' />
             <Text className='text-center'>MTH101</Text>
-          </View>
-          <View className='w-1/3 p-2'>
+          </Pressable>
+          <Pressable className='w-1/3 p-2'>
             <Image source={require('../../assets/google-icon.png')} className='w-24 h-24 rounded-lg' />
             <Text className='text-center'>MTH101</Text>
-          </View>
-          <View className='w-1/3 p-2'>
+          </Pressable>
+          <Pressable className='w-1/3 p-2'>
             <Image source={require('../../assets/google-icon.png')} className='w-24 h-24 rounded-lg' />
             <Text className='text-center'>MTH101</Text>
-          </View>
-          <View className='w-1/3 p-2'>
+          </Pressable>
+          <Pressable className='w-1/3 p-2'>
             <Image source={require('../../assets/google-icon.png')} className='w-24 h-24 rounded-lg' />
             <Text className='text-center'>MTH101</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
