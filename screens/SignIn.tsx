@@ -34,7 +34,8 @@ const SignIn = ({ navigation }) => {
     console.log('Form data submitted:', formData);
     Keyboard.dismiss();
     let validDetails = true;
-    setTimeout(() => navigation.navigate('BottomTabs', { screen: 'Dashboard' }), 2000)
+    // setTimeout(() => , 2000)
+    navigation.navigate('BottomTabs', { screen: 'Dashboard' })
     if (!formData.email) {
       handleError('Input your email', 'email')
       validDetails = false;

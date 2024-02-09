@@ -1,0 +1,23 @@
+{
+    "user": {
+        "fullName": "",
+        "email": "",
+        "level": "",
+        "department": "",
+        "phoneNumber": "",
+        "courses": [
+            0, 1, 2, 3, 4, 5, 6
+        ],
+        "takenQuizes": [
+            {
+                "courseIndex": 1,
+                "questions": [
+                    {}
+                ],
+
+
+            }
+        ]
+
+    }
+}
