@@ -86,7 +86,7 @@ const SignIn = ({ navigation }) => {
         </TouchableOpacity>
         <View className='flex flex-row gap-x-3'>
           <Text>Don't have an account?</Text>
-          <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Create account</Text>
+          <Text className='text-blue-500' onPress={() => navigation.navigate('SignUp')}>Create account</Text>
         </View>
     </SafeAreaView>
   );

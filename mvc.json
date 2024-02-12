@@ -2,11 +2,11 @@
     "user": {
         "fullName": "",
         "email": "",
-        "level": "",
-        "department": "",
+        "level": "100",
+        "department": "science",
         "phoneNumber": "",
-        "courses": [
-            0, 1, 2, 3, 4, 5, 6
+        "offeringCourses": [
+            "mth101", "1", "2", "3", "4", "5", "6"
         ],
         "takenQuizes": [
             {
@@ -14,10 +14,46 @@
                 "questions": [
                     {}
                 ],
-
-
+                "score": 12
+            }
+        ],
+        "paidSubcription": false,
+        "testQuestionNumber": 15,
+        "offlineQuestions": [
+            {}
+        ],
+        "offlineTakenQuizes": [
+            {
+                "courseIndex": 1,
+                "questions": [
+                    {}
+                ],
+                "score": 12
             }
         ]
+    },
+    "questions": {
+        "sciences": {
+            "firstSemester": {
+                "mth101": [
+                    {
+                        "questions": "",
+                        "options": [
+                            "", "", "", ""
+                        ]
+                    }
+                ],
+                "phy101": [
+                    {
+                        "questions": "",
+                        "options": [
+                            "", "", "", ""
+                        ]
+                    }
+                ]
 
+            }
+        }
     }
+
 }

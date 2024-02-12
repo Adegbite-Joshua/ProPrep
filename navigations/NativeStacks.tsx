@@ -10,7 +10,7 @@ const Tab = createNativeStackNavigator();
 
 const NativeStacks = () => {
   return (
-    <Tab.Navigator initialRouteName='Test' screenOptions={{
+    <Tab.Navigator initialRouteName='Landing' screenOptions={{
       headerShown: false,
     }}>
         <Tab.Screen name='Landing' component={Landing} />

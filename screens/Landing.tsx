@@ -21,3 +21,21 @@ const Landing = ({navigation}) => {
 }
 
 export default Landing
+
+
+// {
+//   "build": {
+//     "preview": {
+      
+//     },
+//     "preview2": {
+//       "android": {
+//         "gradleCommand": ":app:assembleReleas­e"
+//       }
+//     },
+//     "preview3": {
+//       "developmentClient":­ true
+//     },
+//     "production": {}
+//   }
+// }

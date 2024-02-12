@@ -1,7 +1,11 @@
 // components/TestTaking.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { View, Text, SafeAreaView, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
+import { useNavigation } from '@react-navigation/native';
+
 
 type OptionsQuestion = {
   type: 'options';
@@ -18,9 +22,10 @@ type StructuralQuestion = {
   userAnswer?: string;
 };
 
-type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: string, userAnswer?: string,  });
+type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: string, userAnswer?: string, });
 
 const TestTaking = () => {
+  const navigation = useNavigation();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(15 * 60);
@@ -107,6 +112,12 @@ const TestTaking = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (timeRemaining === 0) {
+      submitTest();
+    }
+  }, [timeRemaining]);
+
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
@@ -137,21 +148,21 @@ const TestTaking = () => {
     });
 
     setScore(totalScore);
-    // setCurrentQuestionIndex(questions.length); // Show the last screen
     setSubmitModalVisible(true);
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <View className="flex-1 p-4">
+    <SafeAreaView className="flex-1 p-5">
+      <Text className=' text-2xl '>MTH 101</Text>
       <View style={styles.timerContainer}>
         <Text style={styles.timerText}>Time Remaining: {Math.floor(timeRemaining / 60)}:{timeRemaining % 60}</Text>
       </View>
       <View className='flex flex-row flex-wrap justify-start gap-x-1 mb-4'>
         {questions.map((question, index) => {
           const isCurrent = currentQuestionIndex === index;
-          const isAnswered = question.type === 'options' ? question.selectedAnswer !== undefined : question.userAnswer !== undefined;
+          const isAnswered = question.type === 'options' ? question.selectedAnswer !== undefined : question.userAnswer !== undefined || question.userAnswer === '';
 
           const buttonStyle = `w-1/12 bg-blue-500 rounded-md h-5 mb-4 ${isCurrent ? 'bg-blue-700' : ''} ${isAnswered ? 'bg-purple-500' : ''} ${!isAnswered && !isCurrent ? 'bg-red-500' : ''}`;
 
@@ -178,12 +189,14 @@ const TestTaking = () => {
               <TouchableOpacity
                 key={index}
                 onPress={() => handleOptionSelect(option)}
+                className='flex flex-row justify-between rounded-md py-2'
                 style={[
-                  { marginBottom: 2 },
-                  currentQuestion.selectedAnswer === option && { backgroundColor: '#4CAF50' },
+                  { marginBottom: 2, padding: 4, },
+                  currentQuestion.selectedAnswer === option && { borderColor: 'purple', borderWidth: 1, },
                 ]}
               >
-                <Text>{option}</Text>
+                <Text>{`${index + 1}.   ${option}`}</Text>
+                {currentQuestion.selectedAnswer === option ? <Ionicons name="checkmark-sharp" size={24} color="green" /> : null}
               </TouchableOpacity>
             ))
           ) : (
@@ -218,15 +231,34 @@ const TestTaking = () => {
           setSubmitModalVisible(!isSubmitModalVisible);
         }}
       >
-        <View className="flex-1 justify-center items-center p-3 h-96">
-          <View className="bg-white w-full p-2 rounded-lg shadow-lg">
+        <View className="flex-1 justify-center items-center p-3">
+          <View className="bg-white w-full p-2 rounded-lg shadow-lg relative h-96">
             <Text className="text-2xl mb-4">Test Submitted!</Text>
             <Text className="text-lg mb-4">Score: {score} / {questions.length}</Text>
-            <Button title="Close" onPress={() => setSubmitModalVisible(!isSubmitModalVisible)} />
+            <LottieView
+              source={require('../../lottie/fireworks.json')}
+              autoPlay
+              loop={false}
+              style={{ width: 300, height: 300, position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}
+            />
+            <View className='mt-auto mx-auto flex flex-row'>
+              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
+                setSubmitModalVisible(!isSubmitModalVisible);
+                // navigation.navigate('BottomTabs', { screen: 'Courses' });
+              }}>
+                <Text className='text-white'>Close</Text>
+              </Pressable>
+              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
+                setSubmitModalVisible(!isSubmitModalVisible);
+                // navigation.navigate('BottomTabs', { screen: 'Courses' });
+              }}>
+                <Text className='text-white'>Review</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

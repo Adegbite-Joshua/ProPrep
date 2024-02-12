@@ -102,7 +102,7 @@ const CreateAccount = ({ navigation }) => {
             className='px-1'
             onFocus={() => handleError(null, 'password')}
             onChangeText={(text: string) => handleChange(text, 'password')}
-          />          
+          />
           <Input
             label='Phone Number'
             error={errors.phoneNumber}
@@ -124,19 +124,15 @@ const CreateAccount = ({ navigation }) => {
           <TouchableOpacity className='bg-purple-500 p-3 rounded-md mt-24' onPress={handleCreateAccount}>
             <Text className='text-white text-center'>Create Account</Text>
           </TouchableOpacity>
-          <TouchableOpacity className='bg-purple-500 rounded-md mt-4 flex flex-row justify-center items-center' onPress={()=>{}}>
+          <TouchableOpacity className='bg-purple-500 rounded-md mt-4 flex flex-row justify-center items-center' onPress={() => { }}>
             <Image source={require('../assets/google-icon.png')} className='h-16 w-16' />
             <Text className='text-white text-center'>Continue With Google</Text>
           </TouchableOpacity>
-          <View className='flex flex-row justify-center my-5'>
-            <Text>New user?</Text>
-            <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Sign in</Text>
-          </View>
-
         </ScrollView>
-
-
-
+        <View className='flex flex-row justify-center my-5'>
+          <Text>New user?</Text>
+          <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Sign in</Text>
+        </View>
       </View>
     </SafeAreaView>
   );

@@ -22,16 +22,16 @@ const Courses = ({navigation}) => {
             <Text className='mr-2 '>{subject.code}</Text>
             <View className='flex flex-row gap-2'>
               <TouchableOpacity
-                className='border-2 bg-transparent p-2 ms-auto'
+                className='border-2 border-purple-500 bg-transparent p-2 ms-auto'
                 onPress={() => handleButtonClick(subject.code)}
               >
                 <Text className=''>Take Test</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className='border-2 bg-transparent p-2 ms-auto'
+                className='border-2 border-purple-500 bg-transparent p-2 ms-auto'
                 onPress={() => handleButtonClick(subject.code)}
               >
-                <Text className=''>Learn More</Text>
+                <Text className=''>Learn</Text>
               </TouchableOpacity>
             </View>
           </View>
