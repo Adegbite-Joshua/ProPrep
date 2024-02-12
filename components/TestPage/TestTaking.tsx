@@ -1,4 +1,3 @@
-// components/TestTaking.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +23,7 @@ type StructuralQuestion = {
 
 type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: string, userAnswer?: string, });
 
-const TestTaking = ({navigation}) => {
+const TestTaking = ({ navigation }) => {
   // const navigation = useNavigation();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -32,75 +31,90 @@ const TestTaking = ({navigation}) => {
   const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([
     {
-      type: 'options',
-      question: 'What is the capital of France?',
-      options: ['Paris', 'London', 'Berlin', 'Madrid'],
-      correctAnswer: 'Paris',
+      "type": "options",
+      "question": "What is the capital of France?",
+      "options": ["Paris", "London", "Berlin", "Madrid"],
+      "correctAnswer": "Paris"
     },
     {
-      type: 'options',
-      question: '2 + 2 equals?',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: '4',
+      "type": "options",
+      "question": "2 + 2 equals?",
+      "options": ["3", "4", "5", "6"],
+      "correctAnswer": "4"
     },
     {
-      type: 'structural',
-      question: 'Who wrote Romeo and Juliet?',
-      correctAnswer: 'William Shakespeare',
+      "type": "structural",
+      "question": "Who wrote Romeo and Juliet?",
+      "correctAnswer": "William Shakespeare"
     },
     {
-      type: 'structural',
-      question: 'Explain the process of photosynthesis.',
-      correctAnswer:
-        'Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment.',
+      "type": "structural",
+      "question": "Explain the process of photosynthesis.",
+      "correctAnswer": "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment."
     },
     {
-      type: 'options',
-      question: '2 + 2 equals?',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: '4',
+      "type": "options",
+      "question": "What is the capital of Spain?",
+      "options": ["Paris", "London", "Berlin", "Madrid"],
+      "correctAnswer": "Madrid"
     },
     {
-      type: 'structural',
-      question: 'Who wrote Romeo and Juliet?',
-      correctAnswer: 'William Shakespeare',
+      "type": "options",
+      "question": "Who is known as the 'Father of Computer Science'?",
+      "options": ["Alan Turing", "Bill Gates", "Ada Lovelace", "Charles Babbage"],
+      "correctAnswer": "Alan Turing"
     },
     {
-      type: 'structural',
-      question: 'Explain the process of photosynthesis.',
-      correctAnswer:
-        'Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment.',
+      "type": "options",
+      "question": "What is the largest planet in our solar system?",
+      "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+      "correctAnswer": "Jupiter"
     },
     {
-      type: 'options',
-      question: '2 + 2 equals?',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: '4',
+      "type": "options",
+      "question": "Which element has the chemical symbol 'O'?",
+      "options": ["Oxygen", "Gold", "Iron", "Silver"],
+      "correctAnswer": "Oxygen"
     },
     {
-      type: 'structural',
-      question: 'Who wrote Romeo and Juliet?',
-      correctAnswer: 'William Shakespeare',
+      "type": "options",
+      "question": "Who wrote 'To Kill a Mockingbird'?",
+      "options": ["J.K. Rowling", "Harper Lee", "George Orwell", "Ernest Hemingway"],
+      "correctAnswer": "Harper Lee"
     },
     {
-      type: 'structural',
-      question: 'Explain the process of photosynthesis.',
-      correctAnswer:
-        'Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment.',
+      "type": "options",
+      "question": "What is the capital of Australia?",
+      "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+      "correctAnswer": "Canberra"
     },
     {
-      type: 'options',
-      question: '2 + 2 equals?',
-      options: ['3', '4', '5', '6'],
-      correctAnswer: '4',
+      "type": "options",
+      "question": "What is the formula for water?",
+      "options": ["H2O", "CO2", "O2", "NaCl"],
+      "correctAnswer": "H2O"
     },
     {
-      type: 'structural',
-      question: 'Who wrote Romeo and Juliet?',
-      correctAnswer: 'William Shakespeare',
+      "type": "options",
+      "question": "Who discovered penicillin?",
+      "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Thomas Edison"],
+      "correctAnswer": "Alexander Fleming"
     },
+    {
+      "type": "options",
+      "question": "What is the capital of China?",
+      "options": ["Beijing", "Shanghai", "Tokyo", "Seoul"],
+      "correctAnswer": "Beijing"
+    },
+    {
+      "type": "options",
+      "question": "Which planet is known as the 'Red Planet'?",
+      "options": ["Mars", "Venus", "Mercury", "Jupiter"],
+      "correctAnswer": "Mars"
+    }
     // Add more questions as needed
-  ]);
+  ]
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
