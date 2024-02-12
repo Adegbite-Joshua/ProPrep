@@ -5,6 +5,8 @@ import CreateAccount from '../screens/CreateAccount';
 import SignIn from '../screens/SignIn';
 import BottomTabs from './BottomTabs';
 import TestPage from '../screens/user/TestPage';
+import ReviewTest from '../screens/user/ReviewTest';
+import TakenTests from '../screens/user/TakenTests';
 
 const Tab = createNativeStackNavigator();
 
@@ -17,6 +19,8 @@ const NativeStacks = () => {
         <Tab.Screen name='CreateAccount' component={CreateAccount} />
         <Tab.Screen name='SignIn' component={SignIn} />
         <Tab.Screen name='Test' component={TestPage} />
+        <Tab.Screen name='TakenTest' component={TakenTests} />
+        <Tab.Screen name='ReviewTest' component={ReviewTest} />
         <Tab.Screen name='BottomTabs' component={BottomTabs} />
     </Tab.Navigator>
   )

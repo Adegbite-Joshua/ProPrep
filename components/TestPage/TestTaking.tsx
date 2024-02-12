@@ -24,8 +24,8 @@ type StructuralQuestion = {
 
 type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: string, userAnswer?: string, });
 
-const TestTaking = () => {
-  const navigation = useNavigation();
+const TestTaking = ({navigation}) => {
+  // const navigation = useNavigation();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(15 * 60);
@@ -244,13 +244,13 @@ const TestTaking = () => {
             <View className='mt-auto mx-auto flex flex-row'>
               <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
                 setSubmitModalVisible(!isSubmitModalVisible);
-                // navigation.navigate('BottomTabs', { screen: 'Courses' });
+                navigation.navigate('BottomTabs', { screen: 'Courses' });
               }}>
                 <Text className='text-white'>Close</Text>
               </Pressable>
               <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
                 setSubmitModalVisible(!isSubmitModalVisible);
-                // navigation.navigate('BottomTabs', { screen: 'Courses' });
+                navigation.navigate('ReviewTest');
               }}>
                 <Text className='text-white'>Review</Text>
               </Pressable>
