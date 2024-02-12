@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard } from 'react-native';
 import Input from '../components/Forms/Input';
 import LevelSelection from '../components/Forms/LevelSelection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 interface errorsProps {
@@ -30,7 +32,7 @@ const SignIn = ({ navigation }) => {
     setErrors((prevStates) => ({ ...prevStates, [input]: errorMessage }))
   }
 
-  const handleSignIn = () => {
+  const handleSignIn = async() => {
     console.log('Form data submitted:', formData);
     Keyboard.dismiss();
     let validDetails = true;
@@ -46,6 +48,16 @@ const SignIn = ({ navigation }) => {
     if (!formData.password) {
       handleError('Input your password', 'password')
       validDetails = false;
+    }
+
+    if (validDetails) {
+      if (validDetails) {
+        try {
+          await AsyncStorage.setItem('sign_in_before', JSON.stringify({value: true}));
+        } catch (error) {
+          console.error('Error storing the value', error);
+        }
+      }
     }
   };
 

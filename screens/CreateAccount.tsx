@@ -5,6 +5,7 @@ import Input from '../components/Forms/Input';
 import LevelSelection from '../components/Forms/LevelSelection';
 import DepartmentSelection from '../components/Forms/SelectDepartment';
 import Loader from '../components/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface errorsProps {
@@ -39,28 +40,35 @@ const CreateAccount = ({ navigation }) => {
     setErrors((prevStates) => ({ ...prevStates, [input]: errorMessage }))
   }
 
-  const handleCreateAccount = () => {
-    console.log('Form data submitted:', formData);
+  const handleCreateAccount = async() => {
     Keyboard.dismiss();
-    let detailsAreValid = true;
+    let validDetails = true;
     if (!formData.fullName) {
       handleError('Input your full name', 'fullName')
-      detailsAreValid = false;
+      validDetails = false;
     }
     if (!formData.email) {
       handleError('Input your email', 'email')
-      detailsAreValid = false;
+      validDetails = false;
     } else if (!formData.email.match(/\S+@\S+\.\S+/)) {
       handleError('Enter valid email', 'email')
-      detailsAreValid = false;
+      validDetails = false;
     }
     if (!formData.phoneNumber) {
       handleError('Input your phone number', 'phoneNumber')
-      detailsAreValid = false;
+      validDetails = false;
     }
     if (!formData.password) {
       handleError('Input your password', 'password')
-      detailsAreValid = false;
+      validDetails = false;
+    }
+
+    if (validDetails) {
+      try {
+        await AsyncStorage.setItem('created_an_account', JSON.stringify({value: true}));
+      } catch (error) {
+        console.error('Error storing the value', error);
+      }
     }
   };
 

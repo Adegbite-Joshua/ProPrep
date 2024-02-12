@@ -1,8 +1,49 @@
-import { View, Text, SafeAreaView } from 'react-native'
+import { View, Text, SafeAreaView, BackHandler, AppState, Alert } from 'react-native'
 import React from 'react'
 import TestTaking from '../../components/TestPage/TestTaking'
 
+
 const TestPage = ({navigation}) => {
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: null,
+      gestureEnabled: false,
+    });
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        return true;
+      }
+    );
+
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'inactive' || nextAppState === 'background') {
+        // AppState.currentState = 'active';
+        Alert.alert(
+          'Warning',
+          'Minimizing the app is not allowed in this mode.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                AppState.currentState = 'active';
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    };
+
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      (AppState as any).removeEventListener('change', handleAppStateChange);
+      backHandler.remove();
+    };
+
+  }, [navigation]);
 
   return (
     <SafeAreaView className='flex-1'>
