@@ -13,17 +13,20 @@ const Tab = createNativeStackNavigator();
 
 const NativeStacks = () => {
 
-  const [initialRoute, setInitialRoute] = useState<string>('CreateAccount');
+  const [initialRoute, setInitialRoute] = useState<string>('BottomTabs');
 
   useEffect(() => {
     const getInitialRoute = async () => {
       try {
-        if (await AsyncStorage.getItem('signed_in')) {
+        if (await AsyncStorage.getItem('@user')) {
           setInitialRoute('BottomTabs');
+          console.log('BottomTabs')
         } else if (await AsyncStorage.getItem('sign_in_before')) {
           setInitialRoute('SignIn');
+          console.log('SignIn')
         } else if (await AsyncStorage.getItem('created_an_account')) {
           setInitialRoute('CreateAccount');
+          console.log('CreateAccount')
         }
       } catch (error) {
         console.error('Error storing the value', error);

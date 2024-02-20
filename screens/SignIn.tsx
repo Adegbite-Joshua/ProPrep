@@ -6,6 +6,7 @@ import LevelSelection from '../components/Forms/LevelSelection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Loader from '../components/Loader';
+import { serverUrl } from '../constants/constants';
 
 
 interface errorsProps {
@@ -36,8 +37,7 @@ const SignIn = ({ navigation }) => {
 
   const handleSignIn = async () => {
     console.log('Form data submitted:', formData);
-    Keyboard.dismiss();
-    setLoading(true);
+    Keyboard.dismiss();    
     let validDetails = true;
     // setTimeout(() => , 2000)
     if (!formData.email) {
@@ -54,9 +54,9 @@ const SignIn = ({ navigation }) => {
 
     if (validDetails) {
       try {
+        setLoading(true);
         await AsyncStorage.setItem('sign_in_before', JSON.stringify({ value: true }));
-        const sendSignUp:any = await axios.post(`https://proprepbackend.vercel.app/api/testing_route/user/sign_in`, formData)
-        console.log(sendSignUp)
+        const sendSignUp:any = await axios.post(`${serverUrl}/api/testing_route/user/sign_in`, formData)
         if (sendSignUp.status == 200) {
           setLoading(false);
           await AsyncStorage.setItem('@user', JSON.stringify(sendSignUp.data.details));

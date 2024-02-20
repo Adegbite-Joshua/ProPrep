@@ -3,7 +3,10 @@ import React from 'react'
 import TestTaking from '../../components/TestPage/TestTaking'
 
 
-const TestPage = ({navigation}) => {
+const TestPage = ({navigation, route}) => {  
+  const { courseCode } = route.params;
+  console.log(courseCode);
+    
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: null,

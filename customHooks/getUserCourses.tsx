@@ -12,7 +12,6 @@ const getUserCourses = () => {
     const [userDetails] = getUserDetails();
     const [userCourses, setUserCourses] = useState([]);
 
-
     useEffect(() => {
         if(userDetails?.department && userCourses.length == 0){
             if(userDetails?.semester == 'firstSemester') {
@@ -32,8 +31,6 @@ const getUserCourses = () => {
                 }
                 setUserCourses(localCourses);               
             }
-        } else {
-            console.log('no semester');
         }
         // (async () => {
         //     // if (!userCourses.fullName) {
@@ -43,8 +40,8 @@ const getUserCourses = () => {
         //     //         setUserCourses(localUserCourses);
         //     //     }
         //     // }
-        // })();
-    }, [])
+        // })();        
+    }, [userDetails])
 
     return [userCourses]
 }

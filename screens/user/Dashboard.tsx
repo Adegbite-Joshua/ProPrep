@@ -6,15 +6,15 @@ import { updateUserDetails } from '../../redux/userDetails';
 import { userDetailsTypes } from '../../types/userDetails';
 import { courseCodes } from '../../constants/constants';
 import getUserDetails from '../../customHooks/getUserDetails';
+import getUserCourses from '../../customHooks/getUserCourses';
 
 
 
-const Dashboard = ({navigation}) => {
+const Dashboard = ({ navigation }) => {
   const [userDetails] = getUserDetails();
+  const [userCourses] = getUserCourses();
 
-  let users = useSelector((state: any)=>state.userDetails.details);
-  // console.log(localUserDetails);
-  
+  console.log(userCourses);
 
   const firstName = userDetails?.fullName?.split(' ')[0];
   return (
@@ -30,26 +30,12 @@ const Dashboard = ({navigation}) => {
       <View>
         <Text className='my-3 font-bold'>Top Courses</Text>
         <View className='flex flex-row flex-wrap'>
-          <Pressable onPress={()=>navigation.navigate('Test')} className='w-1/3 p-2'>
-            <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-            <Text className='text-center'>{courseCodes['mth101']}</Text>
-          </Pressable>
-          <Pressable onPress={()=>navigation.navigate('Test')} className='w-1/3 p-2'>
-            <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-            <Text className='text-center'>{courseCodes['gns101']}</Text>
-          </Pressable>
-          <Pressable onPress={()=>navigation.navigate('Test')} className='w-1/3 p-2'>
-            <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-            <Text className='text-center'>{courseCodes['mth101']}</Text>
-          </Pressable>
-          <Pressable onPress={()=>navigation.navigate('Test')} className='w-1/3 p-2'>
-            <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-            <Text className='text-center'>{courseCodes['mth101']}</Text>
-          </Pressable>
-          <Pressable onPress={()=>navigation.navigate('Test')} className='w-1/3 p-2'>
-            <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-            <Text className='text-center'>{courseCodes['mth101']}</Text>
-          </Pressable>
+          {userCourses.slice(0, 3).map((courseCode) => (
+            <Pressable onPress={() => navigation.navigate('Test')} className='w-1/3 p-2'>
+              <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
+              <Text className='text-center'>{courseCodes[courseCode]}</Text>
+            </Pressable>
+          ))}
         </View>
       </View>
     </SafeAreaView>

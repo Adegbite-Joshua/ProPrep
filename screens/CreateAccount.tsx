@@ -7,6 +7,7 @@ import DepartmentSelection from '../components/Forms/SelectDepartment';
 import Loader from '../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { serverUrl } from '../constants/constants';
 // import { toast } from 'react-native-toastify';
 
 
@@ -49,7 +50,6 @@ const CreateAccount = ({ navigation }) => {
     //   hideOnPress: true
     // })
     // return;
-    setLoading(true);
     let validDetails = true;
     if (!formData.fullName) {
       handleError('Input your full name', 'fullName')
@@ -73,8 +73,9 @@ const CreateAccount = ({ navigation }) => {
 
     if (validDetails) {
       try {
+        setLoading(true);
         await AsyncStorage.setItem('created_an_account', JSON.stringify({value: true}));
-        const sendSignUp = await axios.post(`https://proprepbackend.vercel.app/api/testing_route/user/create_account`, formData)
+        const sendSignUp = await axios.post(`${serverUrl}/api/testing_route/user/create_account`, formData)
         console.log(sendSignUp)
         if(sendSignUp.status == 201) {
           setLoading(false);
