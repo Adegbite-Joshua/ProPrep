@@ -9,8 +9,7 @@ const questions = [
     question: 'What is the capital of France?',
     options: ['Paris', 'London', 'Berlin', 'Madrid'],
     correctAnswer: 'Paris',
-    solution:
-      'Paris is the capital of France, known for its iconic landmarks such as the Eiffel Tower.',
+    solution: 'Paris is the capital of France, known for its iconic landmarks such as the Eiffel Tower.',
   },
   {
     id: 2,
@@ -72,7 +71,7 @@ const ReviewTest = ({navigation}) => {
   return (
     <SafeAreaView className='flex-1 p-5'>
       <Text className='text-2xl font-bold mb-4'>Quiz Questions</Text>
-
+      
       <ScrollView>
         {questions.map((question, index) => (
           <TouchableOpacity

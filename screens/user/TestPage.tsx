@@ -4,7 +4,6 @@ import TestTaking from '../../components/TestPage/TestTaking'
 
 
 const TestPage = ({navigation}) => {
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: null,
@@ -19,7 +18,7 @@ const TestPage = ({navigation}) => {
 
     const handleAppStateChange = (nextAppState) => {
       if (nextAppState === 'inactive' || nextAppState === 'background') {
-        // AppState.currentState = 'active';
+
         Alert.alert(
           'Warning',
           'Minimizing the app is not allowed in this mode.',
@@ -39,7 +38,7 @@ const TestPage = ({navigation}) => {
     AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
-      (AppState as any).removeEventListener('change', handleAppStateChange);
+      // (AppState as any).removeEventListener('change', handleAppStateChange);
       backHandler.remove();
     };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Landing from '../screens/Landing';
 import CreateAccount from '../screens/CreateAccount';
@@ -12,21 +12,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Tab = createNativeStackNavigator();
 
 const NativeStacks = () => {
-  const [initialLandingPageRoute, setInitialLandingPageRoute] = useState('LandingPage')
-  const initialLandingPage = async() => {
-    try {
-      if (await AsyncStorage.getItem('created_an_account')) {
-        setInitialLandingPageRoute('SignIn')
+
+  const [initialRoute, setInitialRoute] = useState<string>('CreateAccount');
+
+  useEffect(() => {
+    const getInitialRoute = async () => {
+      try {
+        if (await AsyncStorage.getItem('signed_in')) {
+          setInitialRoute('BottomTabs');
+        } else if (await AsyncStorage.getItem('sign_in_before')) {
+          setInitialRoute('SignIn');
+        } else if (await AsyncStorage.getItem('created_an_account')) {
+          setInitialRoute('CreateAccount');
+        }
+      } catch (error) {
+        console.error('Error storing the value', error);
+        setInitialRoute('CreateAccount');
       }
-      if (await AsyncStorage.getItem('sign_in_before')) {
-        setInitialLandingPageRoute('SignIn')
-      }
-    } catch (error) {
-      console.error('Error storing the value', error);
-    }
-  }
+    };
+
+    getInitialRoute();
+  }, []);
   return (
-    <Tab.Navigator initialRouteName='Landing' screenOptions={{
+    <Tab.Navigator initialRouteName={initialRoute} screenOptions={{
       headerShown: false,
     }}>
       <Tab.Screen name='Landing' component={Landing} />

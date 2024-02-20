@@ -56,6 +56,136 @@
 
             }
         }
-    }
+    },
+
+
+
+
+
+    "demo": {
+        "user": {
+          "fullName": "Alice Johnson",
+          "email": "alice.j@example.com",
+          "level": "100",
+          "department": "science",
+          "phoneNumber": "123-456-7890",
+          "offeringCourses": [
+            "mth101",
+            "phy101",
+            "che101",
+            "bio101",
+            "eng101",
+            "comp101",
+            "hist101",
+          ],
+          "takenQuizes": [
+            {
+              "courseIndex": 1,
+              "questions": [
+                {
+                  "question": "What is the capital of France?",
+                  "options": ["Paris", "London", "Berlin", "Madrid"],
+                  "selectedAnswer": "Paris"
+                },
+                {
+                  "question": "2 + 2 equals?",
+                  "options": ["3", "4", "5", "6"],
+                  "selectedAnswer": "4"
+                }
+
+              ],
+              "score": 18,
+              "date": "2024-02-15"
+            }
+          ],
+          "paidSubscription": true,
+          "testQuestionNumber": 15,
+          "offlineQuestions": [
+            {
+              "question": "Explain the process of photosynthesis.",
+              "answer":
+                "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment."
+            }
+          ],
+          "offlineTakenQuizzes": [
+            {
+              "courseIndex": 1,
+              "questions": [
+                {
+                  "question": "Who wrote Romeo and Juliet?",
+                  "options": ["Shakespeare", "Hemingway", "Tolstoy", "Austen"],
+                  "selectedAnswer": "Shakespeare"
+                }
+
+              ],
+              "score": 10,
+              "date": "2024-02-10"
+            }
+          ]
+        },
+        "questions": {
+          "sciences": {
+            "firstSemester": {
+              "mth101": [
+                {
+                  "question": "Solve for x: 3x + 2 = 11",
+                  "options": ["2", "3", "4", "5"],
+                  "correctAnswer": "3"
+                },
+                {
+                  "question": "What is the square root of 25?",
+                  "options": ["3", "4", "5", "6"],
+                  "correctAnswer": "5"
+                }
+
+              ],
+              "phy101": [
+                {
+                  "question": "What is Newton's first law of motion?",
+                  "options": [
+                    "An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction, unless acted on by a net external force.",
+                    "Force equals mass times acceleration.",
+                    "For every action, there is an equal and opposite reaction.",
+                    "The force of gravity depends on the masses of the objects and the distance between them."
+                  ],
+                  "correctAnswer":
+                    "An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction, unless acted on by a net external force."
+                }
+
+              ]
+            },
+            "secondSemester": {
+              "mth101": [
+                {
+                  "question": "Solve for x: 3x + 2 = 11",
+                  "options": ["2", "3", "4", "5"],
+                  "correctAnswer": "3"
+                },
+                {
+                  "question": "What is the square root of 25?",
+                  "options": ["3", "4", "5", "6"],
+                  "correctAnswer": "5"
+                }
+
+              ],
+              "phy101": [
+                {
+                  "question": "What is Newton's first law of motion?",
+                  "options": [
+                    "An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction, unless acted on by a net external force.",
+                    "Force equals mass times acceleration.",
+                    "For every action, there is an equal and opposite reaction.",
+                    "The force of gravity depends on the masses of the objects and the distance between them."
+                  ],
+                  "correctAnswer":
+                    "An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction, unless acted on by a net external force."
+                }
+
+              ]
+            }
+          }
+        }
+      }
+      
 
 }

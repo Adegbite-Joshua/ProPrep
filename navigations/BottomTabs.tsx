@@ -9,7 +9,7 @@ const Tab = createBottomTabNavigator();
 
 const BottomTabs = () => {
   return (
-    <Tab.Navigator screenOptions={({route, navigation})=>({
+    <Tab.Navigator initialRouteName='Dashboard' screenOptions={({route, navigation})=>({
       tabBarIcon: ({color, size, focused}) => {
         let iconName:'home' | 'home-outline'| 'settings' | 'ios-settings-sharp' | 'book' | 'book-outline' = 'home';              
         if(route.name === 'Dashbaord'){

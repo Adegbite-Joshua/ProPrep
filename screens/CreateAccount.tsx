@@ -1,11 +1,13 @@
 // Import necessary components from React Native and Tailwind CSS
 import React, { useState } from 'react';
-import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, View, Image } from 'react-native';
+import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Keyboard, View, Image } from 'react-native';
 import Input from '../components/Forms/Input';
 import LevelSelection from '../components/Forms/LevelSelection';
 import DepartmentSelection from '../components/Forms/SelectDepartment';
 import Loader from '../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+// import { toast } from 'react-native-toastify';
 
 
 interface errorsProps {
@@ -42,6 +44,12 @@ const CreateAccount = ({ navigation }) => {
 
   const handleCreateAccount = async() => {
     Keyboard.dismiss();
+    // toast.success('Toast Message \n jkjjkf', {
+    //   duration: 3000,
+    //   hideOnPress: true
+    // })
+    // return;
+    setLoading(true);
     let validDetails = true;
     if (!formData.fullName) {
       handleError('Input your full name', 'fullName')
@@ -66,14 +74,31 @@ const CreateAccount = ({ navigation }) => {
     if (validDetails) {
       try {
         await AsyncStorage.setItem('created_an_account', JSON.stringify({value: true}));
+        const sendSignUp = await axios.post(`https://proprepbackend.vercel.app/api/testing_route/user/create_account`, formData)
+        console.log(sendSignUp)
+        if(sendSignUp.status == 201) {
+          setLoading(false);
+          navigation.navigate('SignIn');
+          // toast.success('Toast Message \n jkjjkf', {
+          //   duration: 3000,
+          //   hideOnPress: true
+          // })
+        }
+  
       } catch (error) {
+        setLoading(false);
+        if(error.response.status == 409){
+          Alert.alert('Error!','User already exist with this email');
+        } else {
+          Alert.alert('Error!','Something went wrong!');
+        }
         console.error('Error storing the value', error);
       }
     }
   };
 
   return (
-    <SafeAreaView className='flex-1 py-4'>
+    <SafeAreaView className='flex-1'>
       {loading && <Loader text='Loading...' />}
       <View className='flex-1 p-4'>
         <Text className='text-2xl font-bold mb-4'>ProPrep - Register</Text>
@@ -83,6 +108,7 @@ const CreateAccount = ({ navigation }) => {
             label='Full Name'
             error={errors.fullName}
             value={formData.fullName}
+            // keyboardType="text"
             password={false}
             iconName='address-book-o'
             className='px-1'
@@ -126,8 +152,7 @@ const CreateAccount = ({ navigation }) => {
           <LevelSelection
             onValueChange={(text: string) => handleChange(text, 'level')} />
           <DepartmentSelection
-            onValueChange={(text: string) => handleChange(text, 'level')} />
-
+            onValueChange={(text: string) => handleChange(text, 'department')} />
 
           <TouchableOpacity className='bg-purple-500 p-3 rounded-md mt-24' onPress={handleCreateAccount}>
             <Text className='text-white text-center'>Create Account</Text>

@@ -38,11 +38,9 @@ const styles = StyleSheet.create({
 const DepartmentSelection = ({ onValueChange }) => {
 
   const [items, setItems] = useState([
-    {value: '100 Level', key: '100'},
-    {value: 'Agric', key: '200', disabled: true},
-    {value: '300 Level', key: '300', disabled: true},
-    {value: '400 Level', key: '400', disabled: true},
-    {value: '500 Level', key: '500', disabled: true},
+    {value: 'Science', key: 'science'},
+    {value: 'Commercial', key: 'commercial'},
+    {value: 'Art', key: 'art'},
   ]);
 
   return (
@@ -52,7 +50,7 @@ const DepartmentSelection = ({ onValueChange }) => {
         boxStyles={styles.input}
         setSelected={onValueChange}
         data={items}
-        defaultOption={{value: '100 Level', key: '100'}}
+        defaultOption={{value: 'Science', key: 'science'}}
         placeholder='Select Level'/>
     </View>
   );
