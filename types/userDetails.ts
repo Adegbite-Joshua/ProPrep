@@ -1,4 +1,5 @@
 export interface userDetailsTypes {
+    _id?: string,
     fullName?: string,
     email?: string,
     level?: string,

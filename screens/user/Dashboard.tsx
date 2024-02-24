@@ -35,6 +35,36 @@ const Dashboard = ({ navigation }) => {
       },
     ],
   };
+ 
+  // const getQuizQuestions = async (courseCode) => {
+    
+  //   try {
+  //     const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
+
+  //     if (!isConnected) {
+  //       const allCoursesQuestions = JSON.parse(await AsyncStorage.getItem('@allCoursesQuestions'));
+  //       const quizQuestions = allCoursesQuestions[userDetails?.semester][courseCode];
+        
+  //       navigation.navigate('Test', { questionDetails: { questions: getRandomQuestions(quizQuestions, numberOfQuestions), startingTime: Date.now() } });
+  //       return;
+  //     }
+  //     let reqBody = {
+  //       level: userDetails?.level,
+  //       department: userDetails?.department,
+  //       semester: userDetails?.semester,
+  //       courseCode,
+  //       numberOfQuestions
+  //     };
+  //     console.log(reqBody);
+  //     const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
+  //     if (getQuestions.status == 200) {
+  //       navigation.navigate('Test', { questionDetails: getQuestions.data });        
+  //     }
+  //   } catch (error) {
+  //     console.log('Error getting quiz questions', error);
+  //   }
+  // }
+
   return (
     <SafeAreaView className='p-5'>
       <View className="bg-purple-700 rounded-lg p-5 h-64 flex flex-row justify-between">
@@ -48,10 +78,10 @@ const Dashboard = ({ navigation }) => {
       <View>
         <Text className='my-3 font-bold'>Top Courses</Text>
         <View className='flex flex-row flex-wrap'>
-          {userCourses.slice(0, 3).map((courseCode) => (
+          {userCourses.slice(0, 3).map((course) => (
             <Pressable onPress={() => navigation.navigate('Test')} className='w-1/3 p-2'>
               <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
-              <Text className='text-center'>{courseCodes[courseCode]}</Text>
+              <Text className='text-center'>{courseCodes[course.courseCode]}</Text>
             </Pressable>
           ))}
         </View>

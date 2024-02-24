@@ -15,19 +15,19 @@ const getUserCourses = () => {
     useEffect(() => {
         if(userDetails?.department && userCourses.length == 0){
             if(userDetails?.semester == 'firstSemester') {
-                let localCourses = ['mth101', 'gns101', 'lib101']
+                let localCourses = [{courseCode: 'mth101', department: 'general'}, {courseCode: 'gns101', department: 'general'}, {courseCode: 'lib101', department: 'general'}]
                 if(userDetails?.department == 'science'){
-                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101', 'chm191']
+                    localCourses = [...localCourses, {courseCode: 'phy101', department: 'science'}, {courseCode: 'bio101', department: 'science'}, {courseCode: 'chm101', department: 'science'}, {courseCode: 'chm191', department: 'science'}]
                 } else if(userDetails?.department == 'art'){
-                    localCourses = [...localCourses, 'art101', 'law101', 'fjm101']
+                    localCourses = [...localCourses, {courseCode: 'art101', department: 'art'}, {courseCode: 'law101', department: 'art'}, {courseCode: 'fjm101', department: 'art'}]
                 }
                 setUserCourses(localCourses);               
             } else {
-                let localCourses = ['mth101', 'gns101', 'lib101']
+                let localCourses = [{courseCode: 'mth101', department: 'general'}, {courseCode: 'gns101', department: 'general'}, {courseCode: 'lib101', department: 'general'}]
                 if(userDetails?.department == 'science'){
-                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101', 'bio103', 'chm191', 'phy103']
+                    localCourses = [...localCourses, {courseCode: 'phy101', department: 'science'}, {courseCode: 'bio101', department: 'science'}, {courseCode: 'chm101', department: 'science'}, {courseCode: '191', department: 'science'}, {courseCode: 'bio103', department: ''}, {courseCode: 'phy103', department: ''}]
                 } else if(userDetails?.department == 'art'){
-                    localCourses = [...localCourses, 'art101', 'law101', 'fjm101']
+                    localCourses = [...localCourses, {courseCode: 'art101', department: 'art'}, {courseCode: 'law101', department: 'art'}, {courseCode: 'fjm101', department: 'art'}]
                 }
                 setUserCourses(localCourses);               
             }
