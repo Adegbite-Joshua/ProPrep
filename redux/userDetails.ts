@@ -4,17 +4,18 @@ export const userDetails = createSlice({
   name: 'userDetails',
   initialState: {
     details: {},
+    showLatestUpdate: true
   },
   reducers: {
     updateUserDetails: (state, actions) => {
       state.details = actions.payload.userDetails;
     },
-    decrement: (state, actions) => {
-      state.details = actions.payload;
+    updateShowLatestUpdate: (state, actions) => {
+      state.showLatestUpdate = actions.payload;
     },
   },
 });
 
-export const { updateUserDetails, decrement } = userDetails.actions;
+export const { updateUserDetails, updateShowLatestUpdate } = userDetails.actions;
 
 export default userDetails.reducer;

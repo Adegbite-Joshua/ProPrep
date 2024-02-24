@@ -6,6 +6,11 @@ import { userDetailsTypes } from '../types/userDetails';
 import { courseCodes } from '../constants/constants';
 
 
+// const dispatch = useDispatch();
+// import { updateUserDetails } from '../redux/userDetails';
+// import { useDispatch, useSelector } from 'react-redux';
+
+
 
 const getUserDetails = ():[userDetailsTypes] => {
     const dispatch = useDispatch();
@@ -15,7 +20,8 @@ const getUserDetails = ():[userDetailsTypes] => {
         (async () => {
             if (!userDetails.fullName) {
                 const localUserDetails = JSON.parse(await AsyncStorage.getItem('@user'));
-                const semester = await AsyncStorage.getItem('@semester') || 'firstSemester';
+                // const semester = await AsyncStorage.getItem('@semester') || 'firstSemester';
+                const semester = 'firstSemester';
                 if (localUserDetails) {
                     // dispatch(updateUserDetails(localUserDetails));
                     setUserDetails({...localUserDetails, semester});

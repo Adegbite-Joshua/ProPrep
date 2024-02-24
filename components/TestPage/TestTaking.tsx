@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { useNavigation } from '@react-navigation/native';
+import getNetworkInfo from '../../customHooks/getNetworkInfo';
+import getUserDetails from '../../customHooks/getUserDetails';
+import axios from 'axios';
+import { courseCodes, serverUrl } from '../../constants/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+
 
 
 type OptionsQuestion = {
@@ -23,108 +28,30 @@ type StructuralQuestion = {
 
 type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: string, userAnswer?: string, });
 
-const TestTaking = ({ navigation }) => {
-  // const navigation = useNavigation();
+const TestTaking = ({ navigation, questionDetails, courseCode }) => {
+  const [isConnected] = getNetworkInfo();
+  const [userDetails] = getUserDetails();
+
+  const { questions, startingTime } = questionDetails;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(15 * 60);
   const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      "type": "options",
-      "question": "What is the capital of France?",
-      "options": ["Paris", "London", "Berlin", "Madrid"],
-      "correctAnswer": "Paris"
-    },
-    {
-      "type": "options",
-      "question": "2 + 2 equals?",
-      "options": ["3", "4", "5", "6"],
-      "correctAnswer": "4"
-    },
-    {
-      "type": "structural",
-      "question": "Who wrote Romeo and Juliet?",
-      "correctAnswer": "William Shakespeare"
-    },
-    {
-      "type": "structural",
-      "question": "Explain the process of photosynthesis.",
-      "correctAnswer": "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods with the help of chlorophyll pigment."
-    },
-    {
-      "type": "options",
-      "question": "What is the capital of Spain?",
-      "options": ["Paris", "London", "Berlin", "Madrid"],
-      "correctAnswer": "Madrid"
-    },
-    {
-      "type": "options",
-      "question": "Who is known as the 'Father of Computer Science'?",
-      "options": ["Alan Turing", "Bill Gates", "Ada Lovelace", "Charles Babbage"],
-      "correctAnswer": "Alan Turing"
-    },
-    {
-      "type": "options",
-      "question": "What is the largest planet in our solar system?",
-      "options": ["Earth", "Mars", "Jupiter", "Saturn"],
-      "correctAnswer": "Jupiter"
-    },
-    {
-      "type": "options",
-      "question": "Which element has the chemical symbol 'O'?",
-      "options": ["Oxygen", "Gold", "Iron", "Silver"],
-      "correctAnswer": "Oxygen"
-    },
-    {
-      "type": "options",
-      "question": "Who wrote 'To Kill a Mockingbird'?",
-      "options": ["J.K. Rowling", "Harper Lee", "George Orwell", "Ernest Hemingway"],
-      "correctAnswer": "Harper Lee"
-    },
-    {
-      "type": "options",
-      "question": "What is the capital of Australia?",
-      "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
-      "correctAnswer": "Canberra"
-    },
-    {
-      "type": "options",
-      "question": "What is the formula for water?",
-      "options": ["H2O", "CO2", "O2", "NaCl"],
-      "correctAnswer": "H2O"
-    },
-    {
-      "type": "options",
-      "question": "Who discovered penicillin?",
-      "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Thomas Edison"],
-      "correctAnswer": "Alexander Fleming"
-    },
-    {
-      "type": "options",
-      "question": "What is the capital of China?",
-      "options": ["Beijing", "Shanghai", "Tokyo", "Seoul"],
-      "correctAnswer": "Beijing"
-    },
-    {
-      "type": "options",
-      "question": "Which planet is known as the 'Red Planet'?",
-      "options": ["Mars", "Venus", "Mercury", "Jupiter"],
-      "correctAnswer": "Mars"
-    }
-    // Add more questions as needed
-  ]
-  );
+  const [newQuestions, setNewQuestions] = useState<Question[]>(questions);
+
+  const quizDuration = 15 * 60;
+  const [timeRemaining, setTimeRemaining] = useState(quizDuration);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      const currentTime = Date.now();
+      const remainingTime = Math.max(0, Math.floor((startingTime + quizDuration * 1000 - currentTime) / 1000));
+      setTimeRemaining(remainingTime);
     }, 1000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [startingTime]);
 
   useEffect(() => {
     if (timeRemaining === 0) {
@@ -132,25 +59,31 @@ const TestTaking = ({ navigation }) => {
     }
   }, [timeRemaining]);
 
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  }
+
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
 
   const handleOptionSelect = (option: string) => {
-    const updatedQuestions = [...questions];
+    const updatedQuestions = [...newQuestions];
     const currentQuestion = updatedQuestions[currentQuestionIndex] as OptionsQuestion;
     currentQuestion.selectedAnswer = option;
-    setQuestions(updatedQuestions);
+    setNewQuestions(updatedQuestions);
   };
 
   const handleStructuralAnswerChange = (answer: string) => {
-    const updatedQuestions = [...questions];
+    const updatedQuestions = [...newQuestions];
     const currentQuestion = updatedQuestions[currentQuestionIndex] as (StructuralQuestion & { selectedAnswer?: string });
     currentQuestion.userAnswer = answer;
-    setQuestions(updatedQuestions);
+    setNewQuestions(updatedQuestions);
   };
 
-  const submitTest = () => {
+  const submitTest = async () => {
     let totalScore = 0;
 
     questions.forEach((question) => {
@@ -163,15 +96,54 @@ const TestTaking = ({ navigation }) => {
 
     setScore(totalScore);
     setSubmitModalVisible(true);
+
+    try {
+      if (isConnected) {
+        let reqBody = {
+          userId: userDetails?._id,
+          newQuestion: {
+            courseCode,
+            questions: newQuestions,
+            score: totalScore,
+            date: new Date(),
+          }
+        };
+        const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/user/save_attempted_questions`, reqBody);
+      } else {
+        const existingArrayString = await AsyncStorage.getItem('@attemptedOfflineQuizzes');
+        const existingArray = existingArrayString ? JSON.parse(existingArrayString) : [];
+
+        existingArray.push({
+          userId: userDetails?._id,
+          newQuestion: {
+            courseCode,
+            questions: newQuestions,
+            score: totalScore,
+            date: new Date(),
+          },
+        });
+        await AsyncStorage.setItem('@attemptedOfflineQuizzes', JSON.stringify(existingArray));
+        Toast.show({
+          type: 'warning',
+          text1: 'Quiz Sync',
+          text2: 'Quiz questions saved offline, you can synchronize it later'
+        })
+      }
+
+
+    } catch (error) {
+      console.log('Error getting quiz questions', error);
+    }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <SafeAreaView className="flex-1 p-5">
-      <Text className=' text-2xl '>MTH 101</Text>
+      <Toast autoHide visibilityTime={3000} position='top' />
+      <Text className=' text-2xl'>{courseCodes[courseCode]}</Text>
       <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>Time Remaining: {Math.floor(timeRemaining / 60)}:{timeRemaining % 60}</Text>
+        <Text style={styles.timerText}>Time Remaining: {formatTime(timeRemaining)}</Text>
       </View>
       <View className='flex flex-row flex-wrap justify-start gap-x-1 mb-4'>
         {questions.map((question, index) => {
@@ -247,8 +219,8 @@ const TestTaking = ({ navigation }) => {
       >
         <View className="flex-1 justify-center items-center p-3">
           <View className="bg-white w-full p-2 rounded-lg shadow-lg relative h-96">
-            <Text className="text-2xl mb-4">Test Submitted!</Text>
-            <Text className="text-lg mb-4">Score: {score} / {questions.length}</Text>
+            <Text className="text-2xl mb-4 text-center underline">Test Submitted!</Text>
+            <Text className="text-5xl mb-4 text-center">Score: {score} / {questions.length}</Text>
             <LottieView
               source={require('../../lottie/fireworks.json')}
               autoPlay

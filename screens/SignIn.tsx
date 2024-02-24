@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import { serverUrl } from '../constants/constants';
+import Toast from 'react-native-toast-message';
 
 
 interface errorsProps {
@@ -61,14 +62,19 @@ const SignIn = ({ navigation }) => {
           setLoading(false);
           await AsyncStorage.setItem('@user', JSON.stringify(sendSignUp.data.details));
           navigation.navigate('BottomTabs', { screen: 'Dashboard' });
-          // toast.success('Toast Message \n jkjjkf', {
-          //   duration: 3000,
-          //   hideOnPress: true
-          // })
+          Toast.show({
+            type: 'success',
+            text1: 'Successful',
+            text2: 'Sign in successful'
+          })
         }
       } catch (error) {
         setLoading(false);
-
+        Toast.show({
+          type: 'success',
+          text1: 'Successful',
+          text2: 'Sign in successful'
+        })
         console.error('Error storing the value', error);
       }
     }

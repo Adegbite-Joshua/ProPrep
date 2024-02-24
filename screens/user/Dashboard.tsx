@@ -1,22 +1,40 @@
-import { View, Text, SafeAreaView, Image, Pressable } from 'react-native'
-import React, { Fragment, useLayoutEffect, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { updateUserDetails } from '../../redux/userDetails';
-import { userDetailsTypes } from '../../types/userDetails';
+import { View, Text, SafeAreaView, Image, Pressable, Modal, TouchableOpacity } from 'react-native'
+import React, {useState} from 'react'
 import { courseCodes } from '../../constants/constants';
 import getUserDetails from '../../customHooks/getUserDetails';
 import getUserCourses from '../../customHooks/getUserCourses';
+import getLatestUpdate from '../../customHooks/getLatestUpdate';
 
 
 
 const Dashboard = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [userCourses] = getUserCourses();
-
-  console.log(userCourses);
-
+  const [shownLatestUpdate, latestUpdate] = getLatestUpdate();
+  console.log(shownLatestUpdate, latestUpdate);
+  
   const firstName = userDetails?.fullName?.split(' ')[0];
+
+  const [isModalVisible, setIsModalVisible] = useState(true);
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const data = {
+    title: 'Hello, This is a message',
+    message: 'Hello buddy, this is a presaved message',
+    links: [
+      {
+        title: 'Link 1',
+        link: 'https://example.com/link1',
+      },
+      {
+        title: 'Link 2',
+        link: 'https://example.com/link2',
+      },
+    ],
+  };
   return (
     <SafeAreaView className='p-5'>
       <View className="bg-purple-700 rounded-lg p-5 h-64 flex flex-row justify-between">
@@ -38,6 +56,34 @@ const Dashboard = ({ navigation }) => {
           ))}
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <View className='flex-1 justify-center items-center'>
+          <View className='bg-white p-8 rounded-lg items-center shadow-xl'>
+            <Text className='text-xl font-bold mb-4'>{data.title}</Text>
+            <Text className='mb-4'>{data.message}</Text>
+
+            {data.links.map((link, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  console.log('Opening link:', link.link);
+                }}
+              >
+                <Text className='text-blue-500 underline mb-4'>{link.title}</Text>
+              </TouchableOpacity>
+            ))}
+
+            <TouchableOpacity onPress={closeModal}>
+              <Text className='text-red-500 font-bold mt-4'>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   )
 }

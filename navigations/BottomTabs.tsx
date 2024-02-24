@@ -1,13 +1,32 @@
-import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Settings from '../screens/user/Settings';
 import Dashboard from '../screens/user/Dashboard';
 import Courses from '../screens/user/Courses';
 import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabs = () => {
+const BottomTabs = ({navigation}) => {
+ 
+  useEffect(() => {
+    const checkAsyncStorageAndNavigate = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@user');
+
+        if (!value) {
+         
+          navigation.navigate('SignIn');
+        }
+      } catch (error) {
+        console.error('Error checking AsyncStorage:', error);
+      }
+    };
+
+    checkAsyncStorageAndNavigate(); // Perform the check when the BottomTabsWrapper component mounts
+  }, [navigation]);
   return (
     <Tab.Navigator initialRouteName='Dashboard' screenOptions={({route, navigation})=>({
       tabBarIcon: ({color, size, focused}) => {

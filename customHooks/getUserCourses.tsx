@@ -17,15 +17,15 @@ const getUserCourses = () => {
             if(userDetails?.semester == 'firstSemester') {
                 let localCourses = ['mth101', 'gns101', 'lib101']
                 if(userDetails?.department == 'science'){
-                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101']
+                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101', 'chm191']
                 } else if(userDetails?.department == 'art'){
                     localCourses = [...localCourses, 'art101', 'law101', 'fjm101']
                 }
                 setUserCourses(localCourses);               
             } else {
-                let localCourses = ['mth101', 'gns101', 'csc101']
+                let localCourses = ['mth101', 'gns101', 'lib101']
                 if(userDetails?.department == 'science'){
-                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101']
+                    localCourses = [...localCourses, 'phy101', 'bio101', 'chm101', 'bio103', 'chm191', 'phy103']
                 } else if(userDetails?.department == 'art'){
                     localCourses = [...localCourses, 'art101', 'law101', 'fjm101']
                 }

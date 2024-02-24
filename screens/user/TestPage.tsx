@@ -4,8 +4,7 @@ import TestTaking from '../../components/TestPage/TestTaking'
 
 
 const TestPage = ({navigation, route}) => {  
-  const { courseCode } = route.params;
-  console.log(courseCode);
+  const { courseCode, questionDetails } = route.params;
     
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,9 +46,11 @@ const TestPage = ({navigation, route}) => {
 
   }, [navigation]);
 
+  
+
   return (
     <SafeAreaView className='flex-1'>
-      <TestTaking navigation={navigation} />      
+      <TestTaking navigation={navigation} courseCode={courseCode} questionDetails={questionDetails} />      
     </SafeAreaView>
   )
 }

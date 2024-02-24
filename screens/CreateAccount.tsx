@@ -8,7 +8,7 @@ import Loader from '../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { serverUrl } from '../constants/constants';
-// import { toast } from 'react-native-toastify';
+import Toast from 'react-native-toast-message';
 
 
 interface errorsProps {
@@ -80,18 +80,29 @@ const CreateAccount = ({ navigation }) => {
         if(sendSignUp.status == 201) {
           setLoading(false);
           navigation.navigate('SignIn');
-          // toast.success('Toast Message \n jkjjkf', {
-          //   duration: 3000,
-          //   hideOnPress: true
-          // })
+          Toast.show({
+            type: 'success',
+            text1: 'Successful',
+            text2: 'Account created successfully'
+          })
         }
   
       } catch (error) {
         setLoading(false);
         if(error.response.status == 409){
-          Alert.alert('Error!','User already exist with this email');
+          // Alert.alert('Error!','User already exist with this email');
+          Toast.show({
+            type: 'error',
+            text1: 'Error!',
+            text2: 'User already exist with this email!'
+          })
         } else {
-          Alert.alert('Error!','Something went wrong!');
+          Toast.show({
+            type: 'error',
+            text1: 'Error!',
+            text2: 'Something went wrong!'
+          })
+          // Alert.alert('Error!','Something went wrong!');
         }
         console.error('Error storing the value', error);
       }
