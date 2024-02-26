@@ -31,6 +31,8 @@ type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: strin
 const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   const [isConnected] = getNetworkInfo();
   const [userDetails] = getUserDetails();
+  console.log(courseCode);
+  
 
   const { questions, startingTime } = questionDetails;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

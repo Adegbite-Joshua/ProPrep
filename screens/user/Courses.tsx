@@ -47,7 +47,7 @@ const Courses = ({ navigation }) => {
       };
       const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
       if (getQuestions.status == 200) {
-        navigation.navigate('Test', { questionDetails: getQuestions.data });        
+        navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });        
       }
     } catch (error) {
       alert('Something went wrong!')

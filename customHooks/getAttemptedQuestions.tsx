@@ -1,53 +1,43 @@
-// getAttemptedQuestions.js
-
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { serverUrl } from '../constants/constants';
-import { updateAttemptedQuestions, updateShowLatestUpdate } from '../redux/userDetails';
+import { updateAttemptedQuestions } from '../redux/userDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import getUserDetails from './getUserDetails';
 
-const getAttemptedQuestions = (startingNumber: number, endingNumber: number, courseCode: string) => {
+const getAttemptedQuestionss = async (startingNumber, endingNumber, courseCode, userDetails, dispatch) => {
+  try {
+    let reqBody = {
+      startingNumber,
+      endingNumber,
+      courseCode,
+      userId: userDetails?._id,
+    };
+
+    const response = await axios.post(`${serverUrl}/api/testing_route/user/get_attempted_questions`, reqBody);
+
+    const newAttemptedQuestions = response.data;
+
+    dispatch(updateAttemptedQuestions({ courseCode, questions: newAttemptedQuestions }));
+  } catch (error) {
+    console.error('Error fetching attempted questions:', error);
+  }
+};
+
+const getAttemptedQuestions = (startingNumber, endingNumber, courseCode) => {
   const dispatch = useDispatch();
-  const [userDetails] = getUserDetails();
+  const userDetails = getUserDetails();
   const attemptedQuestions = useSelector((state: any) => state.userDetails.attemptedQuestions[courseCode] || []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (attemptedQuestions.some((question) => question.number >= startingNumber && question.number <= endingNumber)) {
-          return;
-        }
-
-        let reqBody = {
-          startingNumber,
-          endingNumber,
-          courseCode,
-          userId: userDetails?._id,
-        };
-        console.log(reqBody)
-        const response = await axios.post(`${serverUrl}/api/testing_route/user/get_attempted_questions`, reqBody);
-
-        const newAttemptedQuestions = response.data;
-        console.log(newAttemptedQuestions)
-
-        dispatch(updateAttemptedQuestions({ courseCode, questions: newAttemptedQuestions }));
-      } catch (error) {
-
-        console.error('Error fetching attempted questions:', error);
-      }
-    };
-
-    if (endingNumber > attemptedQuestions.length) {
-      fetchData();
-    }
-  }, [startingNumber, endingNumber, courseCode, attemptedQuestions, dispatch, userDetails]);
+    // Add your conditions here if needed
+    getAttemptedQuestionss(startingNumber, endingNumber, courseCode, userDetails, dispatch);
+  }, [startingNumber, endingNumber, courseCode, dispatch, userDetails]);
 
   return [attemptedQuestions];
 };
 
 export default getAttemptedQuestions;
-
 
 
 

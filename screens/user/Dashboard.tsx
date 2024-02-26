@@ -11,6 +11,7 @@ const Dashboard = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [userCourses] = getUserCourses();
   const [shownLatestUpdate, latestUpdate] = getLatestUpdate();
+  console.log(userDetails);
   console.log(shownLatestUpdate, latestUpdate);
   
   const firstName = userDetails?.fullName?.split(' ')[0];

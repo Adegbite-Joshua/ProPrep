@@ -23,6 +23,7 @@ const getUserDetails = ():[userDetailsTypes] => {
                 // const semester = await AsyncStorage.getItem('@semester') || 'firstSemester';
                 const semester = 'firstSemester';
                 if (localUserDetails) {
+                    
                     // dispatch(updateUserDetails(localUserDetails));
                     setUserDetails({...localUserDetails, semester});
                 }
