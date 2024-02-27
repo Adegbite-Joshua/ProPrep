@@ -5,39 +5,42 @@ import { updateAttemptedQuestions } from '../redux/userDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import getUserDetails from './getUserDetails';
 
-const getAttemptedQuestionss = async (startingNumber, endingNumber, courseCode, userDetails, dispatch) => {
-  try {
-    let reqBody = {
-      startingNumber,
-      endingNumber,
-      courseCode,
-      userId: userDetails?._id,
-    };
-
-    const response = await axios.post(`${serverUrl}/api/testing_route/user/get_attempted_questions`, reqBody);
-
-    const newAttemptedQuestions = response.data;
-
-    dispatch(updateAttemptedQuestions({ courseCode, questions: newAttemptedQuestions }));
-  } catch (error) {
-    console.error('Error fetching attempted questions:', error);
-  }
-};
-
-const getAttemptedQuestions = (startingNumber, endingNumber, courseCode) => {
+const getAttemptedQuestions = () => {
   const dispatch = useDispatch();
-  const userDetails = getUserDetails();
-  const attemptedQuestions = useSelector((state: any) => state.userDetails.attemptedQuestions[courseCode] || []);
+  const [userDetails] = getUserDetails();
+  let attemptedQuestions = [];
+  
+  const fetchAttemptedQuestions = async (startingNumber: number, endingNumber: number, courseCode: string) => {
+    attemptedQuestions = useSelector((state: any) => state.userDetails.attemptedQuestions[courseCode] || []);
+    try {
+      let reqBody = {
+        startingNumber,
+        endingNumber,
+        courseCode,
+        userId: userDetails?._id,
+      };
 
-  useEffect(() => {
-    // Add your conditions here if needed
-    getAttemptedQuestionss(startingNumber, endingNumber, courseCode, userDetails, dispatch);
-  }, [startingNumber, endingNumber, courseCode, dispatch, userDetails]);
+      console.log('fetching')
+      const response = await axios.post(`${serverUrl}/api/testing_route/user/get_attempted_questions`, reqBody);
 
-  return [attemptedQuestions];
+      console.log(response.data)
+      const newAttemptedQuestions = response.data;
+
+
+      dispatch(updateAttemptedQuestions({ courseCode, questions: newAttemptedQuestions }));
+    } catch (error) {
+      console.error('Error fetching attempted questions:', error);
+    }
+  };
+
+  return {
+    fetchAttemptedQuestions,
+    attemptedQuestions,
+  };
 };
 
 export default getAttemptedQuestions;
+
 
 
 

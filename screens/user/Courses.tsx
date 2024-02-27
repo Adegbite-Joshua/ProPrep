@@ -15,6 +15,14 @@ const Courses = ({ navigation }) => {
   const [userCourses] = getUserCourses();
   const [userDetails] = getUserDetails();
   const [isConnected] = getNetworkInfo();
+
+  const { fetchAttemptedQuestions, attemptedQuestions } = getAttemptedQuestions();
+
+  // Trigger the function when needed, e.g., in a component's useEffect
+  useEffect(() => {
+    fetchAttemptedQuestions(0, 12, 'bio101');
+  }, []);
+  
   
   const getRandomQuestions = (array, count) => {
     const shuffledArray = array.slice();
@@ -47,6 +55,7 @@ const Courses = ({ navigation }) => {
       };
       const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
       if (getQuestions.status == 200) {
+        console.log(getQuestions.data)
         navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });        
       }
     } catch (error) {
@@ -55,9 +64,10 @@ const Courses = ({ navigation }) => {
     }
   }
 
-  const [attemptedQuestions] = getAttemptedQuestions(0, 8, 'bio101');
-  console.log('attemptedQuestions', attemptedQuestions)
+
   const previousQuizzes = () =>{
+    console.log('bio')
+    fetchAttemptedQuestions(0, 12, 'bio101')
   }
   return (
     <SafeAreaView className='flex-1'>

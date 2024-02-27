@@ -10,7 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
 
-
 type OptionsQuestion = {
   type: 'options';
   question: string;
@@ -31,13 +30,13 @@ type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: strin
 const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   const [isConnected] = getNetworkInfo();
   const [userDetails] = getUserDetails();
-  console.log(courseCode);
   
 
   const { questions, startingTime } = questionDetails;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [newQuestions, setNewQuestions] = useState<Question[]>(questions);
 
   const quizDuration = 15 * 60;
@@ -86,6 +85,10 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   };
 
   const submitTest = async () => {
+    if(hasSubmitted){
+      return;
+    }
+    setHasSubmitted(true);
     let totalScore = 0;
 
     questions.forEach((question) => {
@@ -143,7 +146,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   return (
     <SafeAreaView className="flex-1 p-5">
       <Toast autoHide visibilityTime={3000} position='top' />
-      <Text className=' text-2xl'>{courseCodes[courseCode]}</Text>
+      <Text className=' text-2xl p-2'>{courseCodes[courseCode]}</Text>
       <View style={styles.timerContainer}>
         <Text style={styles.timerText}>Time Remaining: {formatTime(timeRemaining)}</Text>
       </View>
