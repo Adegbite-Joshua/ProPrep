@@ -5,9 +5,7 @@ export const userDetails = createSlice({
   initialState: {
     details: {},
     showLatestUpdate: true,
-    attemptedQuestions: {
-
-    }
+    attemptedQuestions: []
   },
   reducers: {
     updateUserDetails: (state, actions) => {
@@ -17,9 +15,9 @@ export const userDetails = createSlice({
       state.showLatestUpdate = actions.payload;
     },
     updateAttemptedQuestions: (state, actions) => {
-      const { courseCode, questions } = actions.payload;
-      state.attemptedQuestions[courseCode] = state.attemptedQuestions[courseCode] || [];
-      state.attemptedQuestions[courseCode] = [...new Set(state.attemptedQuestions[courseCode].concat(questions))];
+      const { questions } = actions.payload;
+      state.attemptedQuestions = state.attemptedQuestions || [];
+      state.attemptedQuestions = [...new Set(state.attemptedQuestions.concat(questions))];
     },
   },
 });

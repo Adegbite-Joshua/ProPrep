@@ -8,6 +8,7 @@ import getUserDetails from '../../customHooks/getUserDetails';
 import getNetworkInfo from '../../customHooks/getNetworkInfo';
 import getAttemptedQuestions from '../../customHooks/getAttemptedQuestions';
 import { ScrollView } from 'react-native';
+// import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -16,14 +17,10 @@ const Courses = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [isConnected] = getNetworkInfo();
 
+  // const attemptedQuestion =  useSelector((state: any) => state.userDetails.attemptedQuestions || {});
+
   const { fetchAttemptedQuestions, attemptedQuestions } = getAttemptedQuestions();
 
-  // Trigger the function when needed, e.g., in a component's useEffect
-  useEffect(() => {
-    fetchAttemptedQuestions(0, 12, 'bio101');
-  }, []);
-  
-  
   const getRandomQuestions = (array, count) => {
     const shuffledArray = array.slice();
 
@@ -35,14 +32,14 @@ const Courses = ({ navigation }) => {
     return shuffledArray.slice(0, count);
   }
 
-  const getQuizQuestions = async (course) => {    
+  const getQuizQuestions = async (course) => {
     try {
       const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
 
       if (!isConnected) {
         const allCoursesQuestions = JSON.parse(await AsyncStorage.getItem('@allCoursesQuestions'));
         const quizQuestions = allCoursesQuestions[course?.semester][course.courseCode];
-        
+
         navigation.navigate('Test', { questionDetails: { questions: getRandomQuestions(quizQuestions, numberOfQuestions), startingTime: Date.now() } });
         return;
       }
@@ -56,7 +53,7 @@ const Courses = ({ navigation }) => {
       const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
       if (getQuestions.status == 200) {
         console.log(getQuestions.data)
-        navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });        
+        navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
       }
     } catch (error) {
       alert('Something went wrong!')
@@ -64,14 +61,22 @@ const Courses = ({ navigation }) => {
     }
   }
 
-
-  const previousQuizzes = () =>{
-    console.log('bio')
-    fetchAttemptedQuestions(0, 12, 'bio101')
+  const previousQuizzes = async () => {
+    if (attemptedQuestions.length < 100) {
+      await fetchAttemptedQuestions(0, 100);
+      console.log(attemptedQuestions);
+      navigation.navigate('TakenTest')
+    }
   }
   return (
     <SafeAreaView className='flex-1'>
       <ScrollView className='p-4'>
+        <TouchableOpacity
+          className='border-2 border-purple-500 bg-transparent rounded-md p-2 ms-auto'
+          onPress={() => previousQuizzes()}
+        >
+          <Text className=''>Previous Quizzes</Text>
+        </TouchableOpacity>
         {userCourses.map((course, index) => (
           <View key={index} className='flex-row items-center border-b-2  border-gray-400 justify-between mb-4 rounded p-4'>
             <Text className='mr-2 '>{courseCodes[course.courseCode]}</Text>
@@ -82,13 +87,7 @@ const Courses = ({ navigation }) => {
               >
                 <Text className=''>Take Quiz</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                className='border-2 border-purple-500 bg-transparent rounded-md p-2 ms-auto'
-                // onPress={() => navigation.navigate('TakenTest')}
-                onPress={() => previousQuizzes()}
-              >
-                <Text className=''>Previous Quizzes</Text>
-              </TouchableOpacity>
+
             </View>
           </View>
         ))}

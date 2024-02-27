@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { View, Text, SafeAreaView, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, Pressable, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import getNetworkInfo from '../../customHooks/getNetworkInfo';
@@ -30,7 +30,7 @@ type Question = OptionsQuestion | (StructuralQuestion & { selectedAnswer?: strin
 const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   const [isConnected] = getNetworkInfo();
   const [userDetails] = getUserDetails();
-  
+
 
   const { questions, startingTime } = questionDetails;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -85,7 +85,30 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   };
 
   const submitTest = async () => {
-    if(hasSubmitted){
+    if (timeRemaining !== 0) {
+      Alert.alert(
+        'Confirmation',
+        'Are you sure you want to submit?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              handleSubmit()
+              console.log('User confirmed');
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
+  const handleSubmit = async() => {
+    if (hasSubmitted) {
       return;
     }
     setHasSubmitted(true);
@@ -103,30 +126,24 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
     setSubmitModalVisible(true);
 
     try {
+      let reqBody = {
+        userId: userDetails?._id,
+        newQuestion: {
+          courseCode,
+          questions: questions,
+          score: totalScore,
+          date: new Date(),
+        }
+      };
+      console.log(reqBody);
+
       if (isConnected) {
-        let reqBody = {
-          userId: userDetails?._id,
-          newQuestion: {
-            courseCode,
-            questions: newQuestions,
-            score: totalScore,
-            date: new Date(),
-          }
-        };
         const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/user/save_attempted_questions`, reqBody);
       } else {
         const existingArrayString = await AsyncStorage.getItem('@attemptedOfflineQuizzes');
         const existingArray = existingArrayString ? JSON.parse(existingArrayString) : [];
 
-        existingArray.push({
-          userId: userDetails?._id,
-          newQuestion: {
-            courseCode,
-            questions: newQuestions,
-            score: totalScore,
-            date: new Date(),
-          },
-        });
+        existingArray.push(reqBody);
         await AsyncStorage.setItem('@attemptedOfflineQuizzes', JSON.stringify(existingArray));
         Toast.show({
           type: 'warning',
@@ -139,7 +156,19 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
     } catch (error) {
       console.log('Error getting quiz questions', error);
     }
-  };
+  }
+
+  const handleReview = () => {
+    setSubmitModalVisible(!isSubmitModalVisible);
+    navigation.navigate('ReviewTest', {
+      questionDetails: {
+        courseCode,
+        questions: newQuestions,
+        score,
+        date: new Date(),
+      }
+    });
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -239,10 +268,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
               }}>
                 <Text className='text-white'>Close</Text>
               </Pressable>
-              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
-                setSubmitModalVisible(!isSubmitModalVisible);
-                navigation.navigate('ReviewTest');
-              }}>
+              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => handleReview()}>
                 <Text className='text-white'>Review</Text>
               </Pressable>
             </View>
