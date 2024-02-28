@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, Text, StyleSheet } from 'react-native';
 import { SelectList } from "react-native-dropdown-select-list";
 
 const styles = StyleSheet.create({
@@ -9,6 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: 'rgb(216 180 254)',
   },
   label: {
     fontSize: 16,
@@ -20,8 +19,7 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderWidth: 1,
-    borderColor: 'gray',
-    backgroundColor: 'rgb(216 180 254)',
+    borderColor: 'rgb(216 180 254)',
     borderRadius: 4,
     padding: 10,
   },
@@ -50,6 +48,7 @@ const DepartmentSelection = ({ onValueChange }) => {
         boxStyles={styles.input}
         setSelected={onValueChange}
         data={items}
+        search={false}
         defaultOption={{value: 'Science', key: 'science'}}
         placeholder='Select Level'/>
     </View>

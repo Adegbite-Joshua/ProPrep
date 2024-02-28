@@ -7,6 +7,7 @@ import BottomTabs from './BottomTabs';
 import TestPage from '../screens/user/TestPage';
 import ReviewTest from '../screens/user/ReviewTest';
 import TakenTests from '../screens/user/TakenTests';
+import UpdateProfile from '../screens/user/UpdateProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createNativeStackNavigator();
@@ -46,6 +47,7 @@ const NativeStacks = () => {
       <Tab.Screen name='Test' component={TestPage} />
       <Tab.Screen name='TakenTest' component={TakenTests} />
       <Tab.Screen name='ReviewTest' component={ReviewTest} />
+      <Tab.Screen name='UpdateProfile' component={UpdateProfile} />
       <Tab.Screen name='BottomTabs' component={BottomTabs} />
     </Tab.Navigator>
   )

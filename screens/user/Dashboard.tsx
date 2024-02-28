@@ -1,26 +1,73 @@
 import { View, Text, SafeAreaView, Image, Pressable, Modal, TouchableOpacity } from 'react-native'
-import React, {useState} from 'react'
-import { courseCodes } from '../../constants/constants';
 import getUserDetails from '../../customHooks/getUserDetails';
 import getUserCourses from '../../customHooks/getUserCourses';
+import getNetworkInfo from '../../customHooks/getNetworkInfo';
 import getLatestUpdate from '../../customHooks/getLatestUpdate';
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from 'react';
+import { courseCodes, serverUrl } from '../../constants/constants';
 
 
 const Dashboard = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [userCourses] = getUserCourses();
+  const [isConnected] = getNetworkInfo();
+
   const [shownLatestUpdate, latestUpdate] = getLatestUpdate();
-  console.log(userDetails);
-  console.log(shownLatestUpdate, latestUpdate);
   
   const firstName = userDetails?.fullName?.split(' ')[0];
 
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(shownLatestUpdate);
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
+  
+  useEffect(()=>{
+    setIsModalVisible(shownLatestUpdate);
+  }, [shownLatestUpdate])
+
+  const getRandomQuestions = (array, count) => {
+    const shuffledArray = array.slice();
+
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+
+    return shuffledArray.slice(0, count);
+  }
+
+
+  const getQuizQuestions = async (course) => {
+    try {
+      const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
+
+      if (!isConnected) {
+        const allCoursesQuestions = JSON.parse(await AsyncStorage.getItem('@allCoursesQuestions'));
+        const quizQuestions = allCoursesQuestions[course?.semester][course.courseCode];
+
+        navigation.navigate('Test', { questionDetails: { questions: getRandomQuestions(quizQuestions, numberOfQuestions), startingTime: Date.now() } });
+        return;
+      }
+      let reqBody = {
+        level: userDetails?.level,
+        department: course?.department,
+        semester: userDetails?.semester,
+        courseCode: course.courseCode,
+        numberOfQuestions
+      };
+      const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
+      if (getQuestions.status == 200) {
+        console.log(getQuestions.data)
+        navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
+      }
+    } catch (error) {
+      alert('Something went wrong!')
+      console.log('Error getting quiz questions', error);
+    }
+  }
 
   const data = {
     title: 'Hello, This is a message',
@@ -80,7 +127,7 @@ const Dashboard = ({ navigation }) => {
         <Text className='my-3 font-bold'>Top Courses</Text>
         <View className='flex flex-row flex-wrap'>
           {userCourses.slice(0, 3).map((course) => (
-            <Pressable onPress={() => navigation.navigate('Test')} className='w-1/3 p-2'>
+            <Pressable onPress={() => getQuizQuestions(course)} className='w-1/3 p-2'>
               <Image source={require('../../assets/logo.png')} className='w-20 h-20 opacity-40 rounded-lg' />
               <Text className='text-center'>{courseCodes[course.courseCode]}</Text>
             </Pressable>
@@ -95,10 +142,10 @@ const Dashboard = ({ navigation }) => {
       >
         <View className='flex-1 justify-center items-center'>
           <View className='bg-white p-8 rounded-lg items-center shadow-xl'>
-            <Text className='text-xl font-bold mb-4'>{data.title}</Text>
-            <Text className='mb-4'>{data.message}</Text>
+            <Text className='text-xl font-bold mb-4'>{latestUpdate.title}</Text>
+            <Text className='mb-4'>{latestUpdate.message}</Text>
 
-            {data.links.map((link, index) => (
+            {latestUpdate?.links?.map((link, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => {

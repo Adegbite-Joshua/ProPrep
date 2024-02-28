@@ -1,14 +1,16 @@
 // Import necessary components from React Native and Tailwind CSS
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Keyboard, View, Image } from 'react-native';
-import Input from '../components/Forms/Input';
-import LevelSelection from '../components/Forms/LevelSelection';
-import DepartmentSelection from '../components/Forms/SelectDepartment';
-import Loader from '../components/Loader';
+import Input from '../../components/Forms/Input';
+import LevelSelection from '../../components/Forms/LevelSelection';
+import DepartmentSelection from '../../components/Forms/SelectDepartment';
+import Loader from '../../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { serverUrl } from '../constants/constants';
+import { serverUrl } from '../../constants/constants';
 import Toast from 'react-native-toast-message';
+import getUserDetails from '../../customHooks/getUserDetails';
+
 
 
 interface errorsProps {
@@ -20,17 +22,29 @@ interface errorsProps {
   department?: string | null,
 }
 
-// CreateAccount component
-const CreateAccount = ({ navigation }) => {
+// UpdateProfile component
+const UpdateProfile = ({ navigation }) => {
+  const [userDetails] = getUserDetails();
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
+    fullName: userDetails.fullName,
+    email: userDetails.email,
+    phoneNumber: userDetails.phoneNumber,
     password: '',
-    level: '',
-    department: '',
+    level: userDetails.level,
+    department: userDetails.department,
   });
+
+  useEffect(()=>{
+    setFormData({
+      fullName: userDetails.fullName,
+      email: userDetails.email,
+      phoneNumber: userDetails.phoneNumber,
+      password: '',
+      level: userDetails.level,
+      department: userDetails.department,
+    })
+  }, [userDetails])
 
   const [errors, setErrors] = useState<errorsProps>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,7 +57,7 @@ const CreateAccount = ({ navigation }) => {
     setErrors((prevStates) => ({ ...prevStates, [input]: errorMessage }))
   }
 
-  const handleCreateAccount = async() => {
+  const handleUpdateProfile = async() => {
     Keyboard.dismiss();
     // toast.success('Toast Message \n jkjjkf', {
     //   duration: 3000,
@@ -83,7 +97,7 @@ const CreateAccount = ({ navigation }) => {
           Toast.show({
             type: 'success',
             text1: 'Successful',
-            text2: 'Account created successfully'
+            text2: 'Profile updated successfully'
           })
         }
   
@@ -94,7 +108,7 @@ const CreateAccount = ({ navigation }) => {
           Toast.show({
             type: 'error',
             text1: 'Error!',
-            text2: 'User already exist with this email!'
+            text2: ''
           })
         } else {
           Toast.show({
@@ -112,15 +126,13 @@ const CreateAccount = ({ navigation }) => {
   return (
     <SafeAreaView className='flex-1'>
       {loading && <Loader text='Loading...' />}
-      <View className='flex-1 p-4'>
-        <Text className='text-2xl font-bold mb-4'>ProPrep - Register</Text>
-        <Text>Enter Your Details to Register</Text>
-        <ScrollView className=''>
+      <View className='flex-1 p-5'>
+        <Text className='text-2xl font-bold mb-4 my-3'>Update Profile</Text>
+        <ScrollView className='my-2'>
           <Input
             label='Full Name'
             error={errors.fullName}
             value={formData.fullName}
-            // keyboardType="text"
             password={false}
             iconName='address-book-o'
             className='px-1'
@@ -166,26 +178,14 @@ const CreateAccount = ({ navigation }) => {
           <DepartmentSelection
             onValueChange={(text: string) => handleChange(text, 'department')} />
 
-          <TouchableOpacity className='bg-purple-500 p-3 rounded-md mt-24' onPress={handleCreateAccount}>
-            <Text className='text-white text-center'>Create Account</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className='bg-purple-500 rounded-md mt-4 flex flex-row justify-center items-center' onPress={() => { }}>
-            <Image source={require('../assets/google-icon.png')} className='h-16 w-16' />
-            <Text className='text-white text-center'>Continue With Google</Text>
-          </TouchableOpacity>
         </ScrollView>
-        <View className='flex flex-row justify-center'>
-          <Text>By creating account, you agreed to </Text>
-          <Text className='text-blue-500' onPress={() => navigation.navigate('TermsAndPolicies')}>our terms and policy</Text>
-        </View>
-        <View className='flex flex-row justify-center my-5'>
-          <Text>New user?</Text>
-          <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Sign in</Text>
-        </View>
+        <TouchableOpacity className='bg-purple-500 p-3 mt-auto rounded-md' onPress={handleUpdateProfile}>
+          <Text className='text-white text-center'>Update</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 
-export default CreateAccount;
+export default UpdateProfile;

@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Select, Center, Box } from "native-base";
-import { FontAwesome } from '@expo/vector-icons';
-import RNPickerSelect from 'react-native-picker-select';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, Text, StyleSheet } from 'react-native';
 import { SelectList } from "react-native-dropdown-select-list";
 
 const styles = StyleSheet.create({
@@ -22,8 +18,8 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderWidth: 1,
-    borderColor: 'gray',
-    backgroundColor: 'rgb(216 180 254)',
+    borderColor: 'rgb(216 180 254)',
+    // backgroundColor: 'rgb(216 180 254)',
     borderRadius: 4,
     padding: 10,
   },
@@ -53,6 +49,7 @@ const LevelSelection = ({ onValueChange }) => {
       <SelectList 
         boxStyles={styles.input}
         setSelected={onValueChange}
+        search={false}
         data={items}
         defaultOption={{value: '100 Level', key: '100'}}
         placeholder='Select Level'/>

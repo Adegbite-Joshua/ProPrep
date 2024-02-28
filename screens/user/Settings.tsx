@@ -73,8 +73,8 @@ const Settings = ({ navigation }) => {
       <Toast autoHide visibilityTime={3000} position='top' />
       <SafeAreaView className=' flex-1'>
         <View className='w-4/5 mx-auto flex-1'>
-          <Pressable className='border-b border-gray-300 w-auto p-3 '>
-            <Text>Change Profile</Text>
+          <Pressable onPress={()=> navigation.navigate('UpdateProfile')} className='border-b border-gray-300 w-auto p-3 '>
+            <Text>Update Profile</Text>
           </Pressable>
           <Pressable className='border-b border-gray-300 w-auto p-3 '>
             <Text>Download Offline Questions</Text>          
