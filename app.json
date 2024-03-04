@@ -10,7 +10,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.proade07.ProPrep"
     },
     "android": {
       "adaptiveIcon": {

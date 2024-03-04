@@ -22,7 +22,7 @@ const Input = ({
   return (
     <View>
       <Text>{label}</Text>
-      <View className={`h-12 flex items-center flex-row border-2 p-1 ${error ? 'border-red-500' : isFocused ? 'border-blue-400' : 'border-purple-400'}`}>
+      <View className={`h-12 flex items-center flex-row border-2 p-1 rounded-md ${error ? 'border-red-500' : isFocused ? 'border-blue-400' : 'border-purple-400'}`}>
         <FontAwesome name={iconName} size={24} className='text-blue-400' />
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <TextInput

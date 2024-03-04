@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import React, { useLayoutEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import { courseCodes } from '../../constants/constants';
 
@@ -65,6 +65,12 @@ const ReviewTest = ({ navigation, route }) => {
   const [questions, setQuestions] = useState(questionDetails.questions)
   const [selectedQuestions, setSelectedQuestions] = useState<any>({});
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerLeft: ()=>(<AntDesign onPress={()=>navigation.goBack()} className='me-auto' name="arrowleft" size={24} color="black" />)
+    })
+  }, [])
 
   const handleQuestionClick = (questionId) => {
     const foundQuestion = questions.find((question) => question._id === questionId);

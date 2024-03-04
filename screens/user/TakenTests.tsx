@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 import getAttemptedQuestions from '../../customHooks/getAttemptedQuestions';
 import { courseCodes, serverUrl } from '../../constants/constants';
+import { AntDesign } from '@expo/vector-icons';
 
 
 // const takenQuizes = [
@@ -62,7 +63,12 @@ const TakenTests = ({ navigation, route }) => {
     }
     setTakenQuizes(attemptedQuestions)
   }, [attemptedQuestions])
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerLeft: ()=>(<AntDesign onPress={()=>navigation.goBack()} className='me-auto' name="arrowleft" size={24} color="black" />)
+    })
+  }, [])
   return (
     <SafeAreaView className='flex-1 p-5'>
       <Text className='text-2xl font-bold mb-4'>Taken Tests</Text>

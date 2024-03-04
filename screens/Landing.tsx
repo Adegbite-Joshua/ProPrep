@@ -7,8 +7,10 @@ const Landing = ({navigation}) => {
     <SafeAreaView className='bg-purple-500 h-full pb-5'>
         <View className='flex gap-y-12 py-24'>
           <Image source={require('../assets/logo.png')} className=' w-44 h-44 mx-auto' />
-          <Text className='text-center text-5xl font-bold text-white'>Pro Prep</Text>
-          <Text className='text-center text-white'>A cbt quiz app</Text>
+          <Text className='text-center text-5xl font-bold text-white'>Pro Prep
+          </Text>
+          {/* <Text className='text-center text-white block text-sm'>A cbt quiz app</Text> */}
+          
         </View>
         <TouchableOpacity onPress={()=>navigation.navigate('CreateAccount')} className='w-3/6 flex justify-center items-center mx-auto mt-auto mb-10' >
           <Text className='bg-white p-3 text-xl rounded-lg text-purple-600'>Get Started</Text>

@@ -1,5 +1,5 @@
 // Import necessary components from React Native and Tailwind CSS
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Keyboard, View, Image } from 'react-native';
 import Input from '../../components/Forms/Input';
 import LevelSelection from '../../components/Forms/LevelSelection';
@@ -10,6 +10,8 @@ import axios from 'axios';
 import { serverUrl } from '../../constants/constants';
 import Toast from 'react-native-toast-message';
 import getUserDetails from '../../customHooks/getUserDetails';
+import getNetworkInfo from '../../customHooks/getNetworkInfo';
+import { AntDesign } from '@expo/vector-icons';
 
 
 
@@ -25,6 +27,8 @@ interface errorsProps {
 // UpdateProfile component
 const UpdateProfile = ({ navigation }) => {
   const [userDetails] = getUserDetails();
+  const [isConnected] = getNetworkInfo();
+
 
   const [formData, setFormData] = useState({
     fullName: userDetails.fullName,
@@ -34,7 +38,12 @@ const UpdateProfile = ({ navigation }) => {
     level: userDetails.level,
     department: userDetails.department,
   });
-
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerLeft: ()=>(<AntDesign onPress={()=>navigation.goBack()} className='me-auto' name="arrowleft" size={24} color="black" />)
+    })
+  }, [])
   useEffect(()=>{
     setFormData({
       fullName: userDetails.fullName,
@@ -57,77 +66,65 @@ const UpdateProfile = ({ navigation }) => {
     setErrors((prevStates) => ({ ...prevStates, [input]: errorMessage }))
   }
 
-  const handleUpdateProfile = async() => {
+  const handleUpdateProfile = async () => {
     Keyboard.dismiss();
-    // toast.success('Toast Message \n jkjjkf', {
-    //   duration: 3000,
-    //   hideOnPress: true
-    // })
-    // return;
-    let validDetails = true;
-    if (!formData.fullName) {
-      handleError('Input your full name', 'fullName')
-      validDetails = false;
-    }
-    if (!formData.email) {
-      handleError('Input your email', 'email')
-      validDetails = false;
-    } else if (!formData.email.match(/\S+@\S+\.\S+/)) {
-      handleError('Enter valid email', 'email')
-      validDetails = false;
-    }
-    if (!formData.phoneNumber) {
-      handleError('Input your phone number', 'phoneNumber')
-      validDetails = false;
-    }
-    if (!formData.password) {
-      handleError('Input your password', 'password')
-      validDetails = false;
-    }
-
-    if (validDetails) {
-      try {
-        setLoading(true);
-        await AsyncStorage.setItem('created_an_account', JSON.stringify({value: true}));
-        const sendSignUp = await axios.post(`${serverUrl}/api/testing_route/user/create_account`, formData)
-        console.log(sendSignUp)
-        if(sendSignUp.status == 201) {
-          setLoading(false);
-          navigation.navigate('SignIn');
-          Toast.show({
-            type: 'success',
-            text1: 'Successful',
-            text2: 'Profile updated successfully'
-          })
-        }
   
-      } catch (error) {
-        setLoading(false);
-        if(error.response.status == 409){
-          // Alert.alert('Error!','User already exist with this email');
-          Toast.show({
-            type: 'error',
-            text1: 'Error!',
-            text2: ''
-          })
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Error!',
-            text2: 'Something went wrong!'
-          })
-          // Alert.alert('Error!','Something went wrong!');
-        }
-        console.error('Error storing the value', error);
+    let validDetails = true;
+    const updatedData: any = {};
+  
+    if (formData.fullName !== userDetails.fullName) {
+      updatedData.fullName = formData.fullName;
+    }
+  
+    if (formData.email !== userDetails.email) {
+      if (!formData.email.match(/\S+@\S+\.\S+/)) {
+        handleError('Enter valid email', 'email');
+        validDetails = false;
+      } else {
+        updatedData.email = formData.email;
       }
     }
+  
+    if (formData.phoneNumber !== userDetails.phoneNumber) {
+      updatedData.phoneNumber = formData.phoneNumber;
+    }
+  
+    if (formData.password !== '') {
+      updatedData.password = formData.password;
+    }
+  
+    console.log(formData);
+    if (validDetails && Object.keys(updatedData).length > 0) {
+      console.log(updatedData);
+      
+      // try {
+      //   setLoading(true);
+      //   const sendUpdate = await axios.put(`${serverUrl}/api/testing_route/user/update_profile`, updatedData);
+      //   console.log(sendUpdate);
+  
+      //   if (sendUpdate.status === 200) {
+      //     setLoading(false);
+      //     navigation.navigate('SignIn');
+      //     Toast.show({
+      //       type: 'success',
+      //       text1: 'Successful',
+      //       text2: 'Profile updated successfully',
+      //     });
+      //   }
+      // } catch (error) {
+      //   setLoading(false);
+      //   // Handle error
+      //   console.error('Error updating profile', error);
+      // }
+    }
   };
+  
 
   return (
     <SafeAreaView className='flex-1'>
       {loading && <Loader text='Loading...' />}
-      <View className='flex-1 p-5'>
-        <Text className='text-2xl font-bold mb-4 my-3'>Update Profile</Text>
+      <View className='flex-1 p-4'>
+        {/* <Text className='text-2xl font-bold mb-4 my-3'>Update Profile</Text> */}
         <ScrollView className='my-2'>
           <Input
             label='Full Name'
@@ -140,6 +137,7 @@ const UpdateProfile = ({ navigation }) => {
             onChangeText={(text: string) => handleChange(text, 'fullName')}
           />
           <Input
+            editable={false}
             label='Email'
             error={errors.email}
             keyboardType="email-address"

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Button } from 'react-native';
 import axios from 'axios';
 import { courseCodes, serverUrl } from '../../constants/constants';
@@ -8,6 +8,7 @@ import getUserDetails from '../../customHooks/getUserDetails';
 import getNetworkInfo from '../../customHooks/getNetworkInfo';
 import getAttemptedQuestions from '../../customHooks/getAttemptedQuestions';
 import { ScrollView } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 // import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -61,6 +62,18 @@ const Courses = ({ navigation }) => {
     }
   }
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerRight: ()=>(<TouchableOpacity
+          className='border-2 border-purple-500 bg-transparent rounded-md text-purple-500 p-2 ms-auto me-3'
+          // onPress={() => previousQuizzes()}
+        >
+          <Text className='text-purple-500'>Previous Quizzes</Text>
+        </TouchableOpacity>)
+    })
+  }, [])
+
   const previousQuizzes = async () => {
     if (attemptedQuestions.length < 100) {
       await fetchAttemptedQuestions(0, 100);
@@ -71,12 +84,7 @@ const Courses = ({ navigation }) => {
   return (
     <SafeAreaView className='flex-1'>
       <ScrollView className='p-4'>
-        <TouchableOpacity
-          className='border-2 border-purple-500 bg-transparent rounded-md p-2 ms-auto'
-          onPress={() => previousQuizzes()}
-        >
-          <Text className=''>Previous Quizzes</Text>
-        </TouchableOpacity>
+        
         {userCourses.map((course, index) => (
           <View key={index} className='flex-row items-center border-b-2  border-gray-400 justify-between mb-4 rounded p-4'>
             <Text className='mr-2 '>{courseCodes[course.courseCode]}</Text>
