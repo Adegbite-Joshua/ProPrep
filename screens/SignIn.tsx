@@ -131,7 +131,7 @@ const SignIn = ({ navigation }) => {
           <Text className='text-white text-center'>Sign In</Text>
         </TouchableOpacity>
         <View className='flex flex-row justify-end'>
-          <Text className='text-red-500 ms-auto w-auto' onPress={() => navigation.navigate('ForgotPassword')}>Forgot Password</Text>
+          <Text className='text-red-500 ms-auto w-auto' onPress={() => navigation.navigate('Forgot Password')}>Forgot Password</Text>
         </View>
         <View className='flex flex-row gap-x-3 justify-center'>
           <Text>Don't have an account?</Text>

@@ -66,7 +66,7 @@ const Courses = ({ navigation }) => {
     navigation.setOptions({
       headerShown: true,
       headerRight: ()=>(<TouchableOpacity
-          className='border-2 border-purple-500 bg-transparent rounded-md text-purple-500 p-2 ms-auto me-3'
+          className='bg-purple-500 rounded-md p-2 ms-auto me-3'
           // onPress={() => previousQuizzes()}
         >
           <Text className='text-purple-500'>Previous Quizzes</Text>
