@@ -65,12 +65,14 @@ const Courses = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerRight: ()=>(<TouchableOpacity
+      headerRight: ()=>(<View className='p-2'>
+        <TouchableOpacity
           className='bg-purple-500 rounded-md p-2 ms-auto me-3'
           // onPress={() => previousQuizzes()}
         >
-          <Text className='text-purple-500'>Previous Quizzes</Text>
-        </TouchableOpacity>)
+          <Text className='text-white'>Previous Quizzes</Text>
+        </TouchableOpacity>
+      </View>)
     })
   }, [])
 
@@ -78,13 +80,12 @@ const Courses = ({ navigation }) => {
     if (attemptedQuestions.length < 100) {
       await fetchAttemptedQuestions(0, 100);
       console.log(attemptedQuestions);
-      navigation.navigate('TakenTest')
+      navigation.navigate('Taken Test')
     }
   }
   return (
     <SafeAreaView className='flex-1'>
       <ScrollView className='p-4'>
-        
         {userCourses.map((course, index) => (
           <View key={index} className='flex-row items-center border-b-2  border-gray-400 justify-between mb-4 rounded p-4'>
             <Text className='mr-2 '>{courseCodes[course.courseCode]}</Text>

@@ -41,9 +41,10 @@ const BottomTabs = ({ navigation }) => {
           if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'ios-settings-sharp';
           }
-
-          return <Ionicons name={iconName} size={size} color={focused ? 'red' : 'gray'} />;
+          return <Ionicons name={iconName} size={size} color={focused ? 'purple' : 'gray'} />;
         },
+        tabBarActiveTintColor: 'purple',
+        tabBarInactiveTintColor: 'gray'
       })}
     >
       <Tab.Screen name='Dashboard' component={Dashboard} />

@@ -76,7 +76,7 @@ const TakenTests = ({ navigation, route }) => {
         data={takenQuizes}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item , index}) => (
-          <TouchableOpacity onPress={()=>navigation.navigate('ReviewTest', {questionDetails: item})} className='border p-2 mb-2 rounded'>
+          <TouchableOpacity onPress={()=>navigation.navigate('Review Test', {questionDetails: item})} className='border p-2 mb-2 rounded'>
             <Text className='text-base mb-2'>
               Course: {courseCodes[item.courseCode]}
             </Text>

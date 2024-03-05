@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import { serverUrl } from '../constants/constants';
 import Toast from 'react-native-toast-message';
 import getNetworkInfo from '../customHooks/getNetworkInfo';
+import ContactUsButton from '../components/ContactUsButton';
 
 
 interface errorsProps {
@@ -138,6 +139,7 @@ const SignIn = ({ navigation }) => {
           <Text className='text-blue-500' onPress={() => navigation.navigate('CreateAccount')}>Create account</Text>
         </View>
       </View>
+      <ContactUsButton navigation={navigation} />
     </SafeAreaView>
   );
 };

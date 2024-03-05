@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { ScrollView, View, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import ContactUsButton from '../components/ContactUsButton';
 
 
 const TermsAndPolicies = ({ navigation }) => {
@@ -44,6 +45,7 @@ const TermsAndPolicies = ({ navigation }) => {
           Thank you for using our CBT Quiz App!
         </Text>
       </View>
+      <ContactUsButton navigation={navigation} />
     </ScrollView>
   );
 };

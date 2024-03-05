@@ -7,6 +7,7 @@ import getNetworkInfo from '../customHooks/getNetworkInfo';
 import axios from 'axios';
 import { serverUrl } from '../constants/constants';
 import { AntDesign } from '@expo/vector-icons';
+import ContactUsButton from '../components/ContactUsButton';
 
 
 interface errorsProps {
@@ -195,6 +196,7 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
           <Text className='text-white'>Next</Text>
         </TouchableOpacity>
       </View>
+      <ContactUsButton navigation={navigation} />
     </View>
   );
 };

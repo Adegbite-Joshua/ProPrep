@@ -93,29 +93,27 @@ const UpdateProfile = ({ navigation }) => {
       updatedData.password = formData.password;
     }
   
-    console.log(formData);
-    if (validDetails && Object.keys(updatedData).length > 0) {
-      console.log(updatedData);
-      
-      // try {
-      //   setLoading(true);
-      //   const sendUpdate = await axios.put(`${serverUrl}/api/testing_route/user/update_profile`, updatedData);
-      //   console.log(sendUpdate);
-  
-      //   if (sendUpdate.status === 200) {
-      //     setLoading(false);
-      //     navigation.navigate('SignIn');
-      //     Toast.show({
-      //       type: 'success',
-      //       text1: 'Successful',
-      //       text2: 'Profile updated successfully',
-      //     });
-      //   }
-      // } catch (error) {
-      //   setLoading(false);
-      //   // Handle error
-      //   console.error('Error updating profile', error);
-      // }
+    if (validDetails && Object.keys(updatedData).length > 0) {      
+      try {
+        setLoading(true);
+        const sendUpdate = await axios.put(`${serverUrl}/api/testing_route/user/update_profile`, updatedData);  
+        if (sendUpdate.status === 200) {
+          setLoading(false);
+          Toast.show({
+            type: 'success',
+            text1: 'Successful',
+            text2: 'Profile updated successfully',
+          });
+        }
+      } catch (error) {
+        setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Something went wrong, please try again',
+        });
+        console.error('Error updating profile', error);
+      }
     }
   };
   

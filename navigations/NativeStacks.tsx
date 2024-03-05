@@ -11,6 +11,7 @@ import UpdateProfile from '../screens/user/UpdateProfile';
 import TermsAndPolicies from '../screens/TermsAndPolicies';
 import ForgotPasswordFlowScreen from '../screens/ForgotPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ContactUsScreen from '../screens/ContactUs';
 
 
 const Tab = createNativeStackNavigator();
@@ -50,11 +51,12 @@ const NativeStacks = () => {
       <Tab.Screen name='CreateAccount' component={CreateAccount} />
       <Tab.Screen name='SignIn' component={SignIn} />
       <Tab.Screen name='Test' component={TestPage} />
-      <Tab.Screen name='TakenTest' component={TakenTests} />
-      <Tab.Screen name='ReviewTest' component={ReviewTest} />
-      <Tab.Screen name='UpdateProfile' component={UpdateProfile} />
-      <Tab.Screen name='TermsAndPolicies' component={TermsAndPolicies} />
+      <Tab.Screen name='Taken Test' component={TakenTests} />
+      <Tab.Screen name='Review Test' component={ReviewTest} />
+      <Tab.Screen name='Update Profile' component={UpdateProfile} />
+      <Tab.Screen name='Terms And Policies' component={TermsAndPolicies} />
       <Tab.Screen name='Forgot Password' component={ForgotPasswordFlowScreen} />
+      <Tab.Screen name='Contact Us' component={ContactUsScreen} />
       <Tab.Screen name='BottomTabs' component={BottomTabs} />
     </Tab.Navigator>
   )

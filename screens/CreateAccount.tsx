@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { serverUrl } from '../constants/constants';
 import Toast from 'react-native-toast-message';
+import ContactUsButton from '../components/ContactUsButton';
 
 
 interface errorsProps {
@@ -176,13 +177,14 @@ const CreateAccount = ({ navigation }) => {
         </ScrollView>
         <View className='flex flex-row justify-center'>
           <Text>By creating account, you agreed to </Text>
-          <Text className='text-blue-500' onPress={() => navigation.navigate('TermsAndPolicies')}>our terms and policy</Text>
+          <Text className='text-blue-500' onPress={() => navigation.navigate('Terms And Policies')}>our terms and policy</Text>
         </View>
         <View className='flex flex-row justify-center my-5'>
           <Text>New user?</Text>
           <Text className='text-blue-500' onPress={() => navigation.navigate('SignIn')}>Sign in</Text>
         </View>
       </View>
+      <ContactUsButton navigation={navigation} />
     </SafeAreaView>
   );
 };
