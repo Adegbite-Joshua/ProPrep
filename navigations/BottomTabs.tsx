@@ -9,21 +9,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Tab = createBottomTabNavigator();
 
 const BottomTabs = ({ navigation }) => {
-  // useLayoutEffect(() => {
-  //   const checkAsyncStorageAndNavigate = async () => {
-  //     try {
-  //       const value = await AsyncStorage.getItem('@user');
+  useLayoutEffect(() => {
+    const checkAsyncStorageAndNavigate = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@user');
 
-  //       if (!value) {
-  //         navigation.navigate('SignIn');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking AsyncStorage:', error);
-  //     }
-  //   };
+        if (!value) {
+          navigation.navigate('SignIn');
+        }
+      } catch (error) {
+        console.error('Error checking AsyncStorage:', error);
+      }
+    };
 
-  //   checkAsyncStorageAndNavigate();
-  // }, [navigation]);
+    checkAsyncStorageAndNavigate();
+  }, [navigation]);
 
   return (
     <Tab.Navigator
