@@ -117,7 +117,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
     questions.forEach((question) => {
       if (question.type === 'options' && question.selectedAnswer === question.correctAnswer) {
         totalScore += 1;
-      } else if (question.type === 'structural' && question.userAnswer === question.correctAnswer) {
+      } else if (question.type === 'structural' && question.userAnswer.toLowerCase() === question.correctAnswer.toLowerCase()) {
         totalScore += 1;
       }
     });
@@ -160,7 +160,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
 
   const handleReview = () => {
     setSubmitModalVisible(!isSubmitModalVisible);
-    navigation.navigate('ReviewTest', {
+    navigation.navigate('Review Test', {
       questionDetails: {
         courseCode,
         questions: newQuestions,

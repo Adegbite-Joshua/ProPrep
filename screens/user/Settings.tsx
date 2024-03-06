@@ -40,18 +40,19 @@ const Settings = ({ navigation }) => {
 
   }
 
-  const downloadOfflineQuestions = async() => {
+  const downloadOfflineQuestions = async () => {
     try {
-      const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;      
+      const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
       let reqBody = {
         level: userDetails?.level,
         department: userDetails?.department,
         semester: userDetails?.semester,
         numberOfQuestions
       };
-      const offlineQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
+      const offlineQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_offline_questions`, reqBody);
       if (offlineQuestions.status == 200) {
         await AsyncStorage.setItem('@offlineQuestions', JSON.stringify(offlineQuestions.data));
+        console.log(offlineQuestions.data)
         Toast.show({
           type: 'success',
           text1: 'Successful',
@@ -73,17 +74,17 @@ const Settings = ({ navigation }) => {
       <Toast autoHide visibilityTime={3000} position='top' />
       <SafeAreaView className=' flex-1'>
         <View className='w-4/5 mx-auto flex-1'>
-          <Pressable onPress={()=> navigation.navigate('Update Profile')} className='border-b border-gray-300 w-auto p-3 '>
+          <Pressable onPress={() => navigation.navigate('Update Profile')} className='border-b border-gray-300 w-auto p-3 '>
             <Text>Update Profile</Text>
           </Pressable>
-          <Pressable className='border-b border-gray-300 w-auto p-3 '>
-            <Text>Download Offline Questions</Text>          
+          <Pressable onPress={() => downloadOfflineQuestions()} className='border-b border-gray-300 w-auto p-3 '>
+            <Text>Download Offline Questions</Text>
           </Pressable>
           <Pressable className='border-b border-gray-300 w-auto p-3 '>
             <Text>Change Question's Number</Text>
             <SelectList
               boxStyles={styles.input}
-              setSelected={async (value: string) => await AsyncStorage.setItem('@questionsNumberValue', value)}
+              setSelected={async (value: string) => await AsyncStorage.setItem('@questionsNumberValue', `${value}`)}
               data={questionsNumberValue}
               search={false}
               defaultOption={{ value: '15 Questions', key: 15 }}
@@ -101,7 +102,7 @@ const Settings = ({ navigation }) => {
               placeholder='Select Level' />
 
           </Pressable>
-          
+
 
           <Pressable onPress={() => signOut()} className='border-b-1 border-gray-300 w-32 p-3 mt-auto mb-5 bg-red-500 mx-auto rounded-xl'>
             <Text className='text-white text-center'>Sign Out</Text>

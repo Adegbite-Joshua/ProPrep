@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, Button } from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, Button, Alert } from 'react-native';
 import axios from 'axios';
 import { courseCodes, serverUrl } from '../../constants/constants';
 import getUserCourses from '../../customHooks/getUserCourses';
@@ -36,7 +36,8 @@ const Courses = ({ navigation }) => {
   const getQuizQuestions = async (course) => {
     try {
       const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
-
+      
+      
       if (!isConnected) {
         const allCoursesQuestions = JSON.parse(await AsyncStorage.getItem('@allCoursesQuestions'));
         const quizQuestions = allCoursesQuestions[course?.semester][course.courseCode];
@@ -57,7 +58,7 @@ const Courses = ({ navigation }) => {
         navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
       }
     } catch (error) {
-      alert('Something went wrong!')
+      Alert.alert('Something went wrong!')
       console.log('Error getting quiz questions', error);
     }
   }
@@ -68,7 +69,7 @@ const Courses = ({ navigation }) => {
       headerRight: ()=>(<View className='p-2'>
         <TouchableOpacity
           className='bg-purple-500 rounded-md p-2 ms-auto me-3'
-          // onPress={() => previousQuizzes()}
+          onPress={() => previousQuizzes()}
         >
           <Text className='text-white'>Previous Quizzes</Text>
         </TouchableOpacity>

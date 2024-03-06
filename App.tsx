@@ -23,7 +23,7 @@ export default function App() {
   return (
 
     <Provider store={store}>
-      <StatusBar style='auto'/>
+      <StatusBar style='inverted'/>
       <Toast autoHide visibilityTime={3000} position='top'></Toast>
       <Navigations />
     </Provider>

@@ -16,7 +16,7 @@ import ContactUsScreen from '../screens/ContactUs';
 
 const Tab = createNativeStackNavigator();
 
-const NativeStacks = () => {
+const NativeStacks = async() => {
 
   // const [initialRoute, setInitialRoute] = useState<string>('BottomTabs');
   const [initialRoute, setInitialRoute] = useState<string>('Landing');
@@ -35,7 +35,6 @@ const NativeStacks = () => {
           console.log('CreateAccount')
         }
       } catch (error) {
-        console.error('Error storing the value', error);
         setInitialRoute('CreateAccount');
       }
     };
@@ -43,10 +42,13 @@ const NativeStacks = () => {
     getInitialRoute();
   }, []);
   return (
-    <Tab.Navigator initialRouteName={initialRoute} screenOptions={{
+    <Tab.Navigator 
+    // initialRouteName={await AsyncStorage.getItem('@user') ? 'BottomTabs' : await AsyncStorage.getItem('sign_in_before') ? 'SignIn' : await AsyncStorage.getItem('created_an_account') ? 'CreateAccount' : 'Landing' }
+    initialRouteName={initialRoute} 
+    screenOptions={{
       headerShown: false,
       headerTitleAlign: 'center'
-    }}>
+    }}>   
       <Tab.Screen name='Landing' component={Landing} />
       <Tab.Screen name='CreateAccount' component={CreateAccount} />
       <Tab.Screen name='SignIn' component={SignIn} />
