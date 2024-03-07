@@ -18,8 +18,6 @@ const Courses = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [isConnected] = getNetworkInfo();
 
-  // const attemptedQuestion =  useSelector((state: any) => state.userDetails.attemptedQuestions || {});
-
   const { fetchAttemptedQuestions, attemptedQuestions } = getAttemptedQuestions();
 
   const getRandomQuestions = (array, count) => {
@@ -36,13 +34,35 @@ const Courses = ({ navigation }) => {
   const getQuizQuestions = async (course) => {
     try {
       const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
-      
-      if (isConnected && await AsyncStorage.getItem('@offlineQuestions')) {        
-        const allCoursesQuestions = await AsyncStorage.getItem('@offlineQuestions') ? JSON.parse(await AsyncStorage.getItem('@offlineQuestions')) : {};
-        const quizQuestions = allCoursesQuestions[course?.semester][course.courseCode];
-        navigation.navigate('Test', { questionDetails: { questions: getRandomQuestions(quizQuestions, numberOfQuestions), startingTime: Date.now() } });
+      const allQuestionsString = await AsyncStorage.getItem('@offlineQuestions');
+      if (!isConnected && allQuestionsString != 'null' ) { 
+        const allCoursesQuestions = JSON.parse(allQuestionsString);
+        if (!allCoursesQuestions[course.department][userDetails?.semester]['questions']) {
+          Alert.alert(
+            'No question found for these semester',
+            'You are not connected and you do not have any stored locally on your device',
+            [
+              // {
+              //   text: 'Cancel',
+              //   style: 'cancel',
+              // },
+              {
+                text: 'OK',
+                onPress: () => {
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+          return;
+        }
+        const quizQuestions = allCoursesQuestions[course.department][userDetails?.semester]['questions'][course.courseCode];
+        console.log(quizQuestions)       
+        let questions = getRandomQuestions(quizQuestions, numberOfQuestions);
+        navigation.navigate('Test', { questionDetails: { questions, startingTime: Date.now() } });
         return;
-      } else if (isConnected && !(await AsyncStorage.getItem('@offlineQuestions'))) {
+      } else if (!isConnected && allQuestionsString == 'null') {
+        console.log('not found')
         Alert.alert(
           'No question found',
           'You are not connected and you do not have any stored locally on your device',
@@ -59,26 +79,27 @@ const Courses = ({ navigation }) => {
           ],
           { cancelable: false }
         );
+        return;
       }
-      // let reqBody = {
-      //   level: userDetails?.level,
-      //   department: course?.department,
-      //   semester: userDetails?.semester,
-      //   courseCode: course.courseCode,
-      //   numberOfQuestions
-      // };
-      // const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
-      // if (getQuestions.status == 200) {
-      //   console.log(getQuestions.data)
-      //   navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
-      // }
+      let reqBody = {
+        level: userDetails?.level,
+        department: course?.department,
+        semester: userDetails?.semester,
+        courseCode: course.courseCode,
+        numberOfQuestions
+      };
+      const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
+      if (getQuestions.status == 200) {
+        console.log(getQuestions.data)
+        navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
+      }
     } catch (error) {
       Alert.alert('Something went wrong!')
       console.log('Error getting quiz questions', error);
     }
-    console.log(course);
-
   }
+
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({

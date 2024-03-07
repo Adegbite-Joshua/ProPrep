@@ -11,7 +11,7 @@ const getAttemptedQuestions = () => {
   const dispatch = useDispatch();
   const [userDetails] = getUserDetails();
 
-  const attemptedQuestions =  useSelector((state: any) => state.userDetails.attemptedQuestions || []);
+  let attemptedQuestions =  useSelector((state: any) => state.userDetails.attemptedQuestions) || [];
 
   const fetchAttemptedQuestions = useCallback(async (startingNumber, endingNumber) => {
     try {
