@@ -68,7 +68,7 @@ const ReviewTest = ({ navigation, route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerLeft: ()=>(<AntDesign onPress={()=>navigation.goBack()} className='me-auto' name="arrowleft" size={24} color="black" />)
+      headerLeft: ()=>(<AntDesign onPress={()=>navigation.navigate('Courses')} className='me-auto' name="arrowleft" size={24} color="black" />)
     })
   }, [])
 

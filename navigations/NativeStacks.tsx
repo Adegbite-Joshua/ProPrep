@@ -65,10 +65,8 @@
 // }
 
 // export default NativeStacks;
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Landing from '../screens/Landing';
 import CreateAccount from '../screens/CreateAccount';
 import SignIn from '../screens/SignIn';
@@ -79,41 +77,43 @@ import TakenTests from '../screens/user/TakenTests';
 import UpdateProfile from '../screens/user/UpdateProfile';
 import TermsAndPolicies from '../screens/TermsAndPolicies';
 import ForgotPasswordFlowScreen from '../screens/ForgotPassword';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import ContactUsScreen from '../screens/ContactUs';
+
 
 const Tab = createNativeStackNavigator();
 
-const NativeStacks = ({ navigation }) => {
-  const [initialRoute, setInitialRoute] = useState('Landing');
+const NativeStacks = () => {
+
+  // const [initialRoute, setInitialRoute] = useState<string>('BottomTabs');
+  const [initialRoute, setInitialRoute] = useState<string>('Landing');
 
   useEffect(() => {
     const getInitialRoute = async () => {
       try {
         if (await AsyncStorage.getItem('@user')) {
           setInitialRoute('BottomTabs');
+          console.log('BottomTabs')
         } else if (await AsyncStorage.getItem('sign_in_before')) {
           setInitialRoute('SignIn');
+          console.log('SignIn')
         } else if (await AsyncStorage.getItem('created_an_account')) {
           setInitialRoute('CreateAccount');
+          console.log('CreateAccount')
         }
       } catch (error) {
-        console.error('Error getting initial route:', error);
-        // Handle error as needed, and set a default initial route
-        setInitialRoute('Landing');
+        console.error('Error storing the value', error);
+        setInitialRoute('CreateAccount');
       }
     };
 
     getInitialRoute();
   }, []);
-
   return (
-    <Tab.Navigator 
-      initialRouteName='Landing'
-      screenOptions={{
-        headerShown: false,
-        headerTitleAlign: 'center'
-      }}
-    >   
+    <Tab.Navigator initialRouteName={'BottomTabs'} screenOptions={{
+      headerShown: false,
+      headerTitleAlign: 'center'
+    }}>
       <Tab.Screen name='Landing' component={Landing} />
       <Tab.Screen name='CreateAccount' component={CreateAccount} />
       <Tab.Screen name='SignIn' component={SignIn} />
@@ -126,7 +126,7 @@ const NativeStacks = ({ navigation }) => {
       <Tab.Screen name='Contact Us' component={ContactUsScreen} />
       <Tab.Screen name='BottomTabs' component={BottomTabs} />
     </Tab.Navigator>
-  );
-};
+  )
+}
 
-export default NativeStacks;
+export default NativeStacks

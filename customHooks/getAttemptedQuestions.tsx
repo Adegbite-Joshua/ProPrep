@@ -23,8 +23,9 @@ const getAttemptedQuestions = () => {
       
       const response = await axios.post(`${serverUrl}/api/testing_route/user/get_attempted_questions`, reqBody);
       
+      console.log(response, 'response');
       const newAttemptedQuestions = response.data.sortedQuestions.questions;
-      console.log(newAttemptedQuestions)
+      console.log(newAttemptedQuestions, 'attempted');
       dispatch(updateAttemptedQuestions({ questions: newAttemptedQuestions }));
     } catch (error) {
       console.error('Error fetching attempted questions:', error);

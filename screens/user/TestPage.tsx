@@ -46,8 +46,6 @@ const TestPage = ({navigation, route}) => {
 
   }, [navigation]);
 
-  
-
   return (
     <SafeAreaView className='flex-1'>
       <TestTaking navigation={navigation} courseCode={courseCode} questionDetails={questionDetails} />      
