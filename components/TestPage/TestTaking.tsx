@@ -7,7 +7,6 @@ import getUserDetails from '../../customHooks/getUserDetails';
 import axios from 'axios';
 import { courseCodes, serverUrl } from '../../constants/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
 
 
 type OptionsQuestion = {
@@ -39,7 +38,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [newQuestions, setNewQuestions] = useState<Question[]>(questions);
 
-  const quizDuration = 15 * 60;
+  const quizDuration = questions.length * 60;
   const [timeRemaining, setTimeRemaining] = useState(quizDuration);
 
   useEffect(() => {
@@ -97,6 +96,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
           {
             text: 'OK',
             onPress: () => {
+              console.log(hasSubmitted);            
               handleSubmit()
               console.log('User confirmed');
             },
@@ -106,21 +106,27 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
       );
     }
   };
+// console.log(questions);
 
   const handleSubmit = async() => {
-    if (hasSubmitted) {
-      return;
-    }
+    // if (hasSubmitted) {
+    //   return;
+    // }
     setHasSubmitted(true);
     let totalScore = 0;
 
-    questions.forEach((question) => {
-      if (question.type === 'options' && question.selectedAnswer === question.correctAnswer) {
-        totalScore += 1;
-      } else if (question.type === 'structural' && question.userAnswer.toLowerCase() === question.correctAnswer.toLowerCase()) {
-        totalScore += 1;
-      }
-    });
+    try {
+      questions.forEach((question) => {
+        if (question.type === 'options' && question.selectedAnswer === question.correctAnswer) {
+          totalScore += 1;
+        } else if (question.type === 'structural' && question?.userAnswer?.toLowerCase()?.trim() === question?.correctAnswer?.toLowerCase()?.trim()) {
+          totalScore += 1;
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      
+    }
 
     setScore(totalScore);
     setSubmitModalVisible(true);
@@ -135,7 +141,6 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
           date: new Date(),
         }
       };
-      console.log(reqBody);
 
       if (isConnected) {
         const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/user/save_attempted_questions`, reqBody);
@@ -145,11 +150,8 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
 
         existingArray.push(reqBody);
         await AsyncStorage.setItem('@attemptedOfflineQuizzes', JSON.stringify(existingArray));
-        Toast.show({
-          type: 'warning',
-          text1: 'Quiz Sync',
-          text2: 'Quiz questions saved offline, you can synchronize it later'
-        })
+        Alert.alert('Error!','Quiz questions saved offline, you can synchronize it later');
+        
       }
 
 
@@ -174,7 +176,6 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
 
   return (
     <SafeAreaView className="flex-1 p-5">
-      <Toast autoHide visibilityTime={3000} position='top' />
       <Text className=' text-2xl p-2'>{courseCodes[courseCode]}</Text>
       <View style={styles.timerContainer}>
         <Text style={styles.timerText}>Time Remaining: {formatTime(timeRemaining)}</Text>
@@ -262,13 +263,13 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
               style={{ width: 300, height: 300, position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }}
             />
             <View className='mt-auto mx-auto flex flex-row'>
-              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => {
+              <Pressable className=' bg-purple-500 mx-2 p-3 rounded-md' onPress={() => {
                 setSubmitModalVisible(!isSubmitModalVisible);
                 navigation.navigate('BottomTabs', { screen: 'Courses' });
               }}>
                 <Text className='text-white'>Close</Text>
               </Pressable>
-              <Pressable className=' bg-blue-500 mx-2 p-3 rounded-md' onPress={() => handleReview()}>
+              <Pressable className=' bg-purple-500 mx-2 p-3 rounded-md' onPress={() => handleReview()}>
                 <Text className='text-white'>Review</Text>
               </Pressable>
             </View>

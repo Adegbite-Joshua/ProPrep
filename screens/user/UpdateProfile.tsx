@@ -8,7 +8,6 @@ import Loader from '../../components/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { serverUrl } from '../../constants/constants';
-import Toast from 'react-native-toast-message';
 import getUserDetails from '../../customHooks/getUserDetails';
 import getNetworkInfo from '../../customHooks/getNetworkInfo';
 import { AntDesign } from '@expo/vector-icons';
@@ -68,9 +67,15 @@ const UpdateProfile = ({ navigation }) => {
 
   const handleUpdateProfile = async () => {
     Keyboard.dismiss();
+    if (!isConnected) {
+      Alert.alert('Internet Connection!', 'Try connecting to the internet and try again!');
+      return;
+    }
   
     let validDetails = true;
-    const updatedData: any = {};
+    const updatedData: any = {
+      userId: userDetails._id
+    };
   
     if (formData.fullName !== userDetails.fullName) {
       updatedData.fullName = formData.fullName;
@@ -92,26 +97,23 @@ const UpdateProfile = ({ navigation }) => {
     if (formData.password !== '') {
       updatedData.password = formData.password;
     }
+    console.log(updatedData, 'before');
   
-    if (validDetails && Object.keys(updatedData).length > 0) {      
+    if (validDetails && Object.keys(updatedData).length > 1) {      
       try {
+        console.log(updatedData);
         setLoading(true);
-        const sendUpdate = await axios.put(`${serverUrl}/api/testing_route/user/update_profile`, updatedData);  
+        const sendUpdate = await axios.post(`${serverUrl}/api/testing_route/user/update_details`, updatedData);  
         if (sendUpdate.status === 200) {
           setLoading(false);
-          Toast.show({
-            type: 'success',
-            text1: 'Successful',
-            text2: 'Profile updated successfully',
-          });
+          const newUserDetails = { ...userDetails, ...updatedData };
+          await AsyncStorage.setItem('@user', JSON.stringify(newUserDetails));
+          Alert.alert('Successful','Profile updated successfully, please restart the app if the changs does not effect');          
         }
       } catch (error) {
         setLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Something went wrong, please try again',
-        });
+        Alert.alert('Error','Something went wrong, please try again!');
+        
         console.error('Error updating profile', error);
       }
     }

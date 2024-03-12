@@ -10,6 +10,7 @@ import getAttemptedQuestions from '../../customHooks/getAttemptedQuestions';
 import { ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 // import { useDispatch, useSelector } from 'react-redux';
+import * as Notix from 'notix-rn';
 
 
 
@@ -115,10 +116,28 @@ const Courses = ({ navigation }) => {
     })
   }, [])
 
+  // useEffect(()=>{
+  //   (async()=>{
+  //     let interstitialLoader: Notix.InterstitialLoader;
+
+  //     interstitialLoader = await Notix.Interstitial.createLoader(7194365);
+  //     interstitialLoader.startLoading();
+  //     let interstitialData;
+  //     try {
+  //       interstitialData = await interstitialLoader.next(5000);
+  //     } catch (e){
+  //       console.log('monetag error', e)
+  //     }
+  //     Notix.Interstitial.show(interstitialData)
+  //   })()
+  // }, [])
+
   const previousQuizzes = async () => {
     if (attemptedQuestions.length < 100) {
       await fetchAttemptedQuestions(0, 100);
       console.log(attemptedQuestions);
+      navigation.navigate('Taken Test')
+    } else {
       navigation.navigate('Taken Test')
     }
   }

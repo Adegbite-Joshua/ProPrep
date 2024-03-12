@@ -1,12 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react'
-import { SafeAreaView, Text, View, Pressable, StyleSheet } from 'react-native'
+import React from 'react'
+import { SafeAreaView, Text, View, Pressable, StyleSheet, Alert } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import { courseCodes, serverUrl } from '../../constants/constants';
 import getUserDetails from '../../customHooks/getUserDetails';
-
 
 
 
@@ -28,17 +27,19 @@ const Settings = ({ navigation }) => {
   const signOut = async () => {
     try {
       await AsyncStorage.removeItem('@user');
-      Toast.show({
-        type: 'success',
-        text1: 'Successful',
-        text2: 'Signing out successful'
-      })
+      // Toast.show({
+      //   type: 'success',
+      //   text1: '',
+      //   text2: ''
+      // })
+      Alert.alert('Successful','Signing out successful!');
       navigation.navigate('SignIn');
     } catch (err) {
       console.log(err)
     }
 
   }
+  
 
   const downloadOfflineQuestions = async () => {
     try {
@@ -53,25 +54,20 @@ const Settings = ({ navigation }) => {
       if (offlineQuestions.status == 200) {
         await AsyncStorage.setItem('@offlineQuestions', JSON.stringify(offlineQuestions.data));
         console.log(offlineQuestions.data)
-        Toast.show({
-          type: 'success',
-          text1: 'Successful',
-          text2: 'Offline questions downloaded'
-        })
+      Alert.alert('Successful','Offline questions downloaded');
+
       }
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'An error occur while downloading the questions, please try again'
-      })
+      Alert.alert('Error','An error occur while downloading the questions, please try again');
+      
       console.log('Error getting quiz questions', error);
     }
   }
 
+
   return (
     <View className='flex-1'>
-      <Toast autoHide visibilityTime={3000} position='top' />
+      {/* <Toast autoHide visibilityTime={3000} position='top' /> */}
       <SafeAreaView className=' flex-1'>
         <View className='w-4/5 mx-auto flex-1'>
           <Pressable onPress={() => navigation.navigate('Update Profile')} className='border-b border-gray-300 w-auto p-3 '>

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { serverUrl } from '../constants/constants';
 import Toast from 'react-native-toast-message';
 import ContactUsButton from '../components/ContactUsButton';
+import getNetworkInfo from '../customHooks/getNetworkInfo';
 
 
 interface errorsProps {
@@ -35,6 +36,8 @@ const CreateAccount = ({ navigation }) => {
 
   const [errors, setErrors] = useState<errorsProps>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [isConnected] = getNetworkInfo();
+
 
   const handleChange = (value: string, input: string) => {
     setFormData((prevStates) => ({ ...prevStates, [input]: value }))
@@ -72,6 +75,11 @@ const CreateAccount = ({ navigation }) => {
       validDetails = false;
     }
 
+    if (!isConnected) {
+      Alert.alert('Internet Connection!', 'Try connecting to the internet and try again!');
+      return;
+    }
+
     if (validDetails) {
       try {
         setLoading(true);
@@ -81,29 +89,30 @@ const CreateAccount = ({ navigation }) => {
         if(sendSignUp.status == 201) {
           setLoading(false);
           navigation.navigate('SignIn');
-          Toast.show({
-            type: 'success',
-            text1: 'Successful',
-            text2: 'Account created successfully'
-          })
+          // Toast.show({
+          //   type: 'success',
+          //   text1: 'Successful',
+          //   text2: 'Account created successfully'
+          // })
         }
   
       } catch (error) {
         setLoading(false);
         if(error.response.status == 409){
-          // Alert.alert('Error!','User already exist with this email');
-          Toast.show({
-            type: 'error',
-            text1: 'Error!',
-            text2: 'User already exist with this email!'
-          })
+          Alert.alert('Error!','User already exist with this email');
+          // Toast.show({
+          //   type: 'error',
+          //   text1: 'Error!',
+          //   text2: 'User already exist with this email!'
+          // })
+
         } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Error!',
-            text2: 'Something went wrong!'
-          })
-          // Alert.alert('Error!','Something went wrong!');
+          // Toast.show({
+          //   type: 'error',
+          //   text1: 'Error!',
+          //   text2: 'Something went wrong!'
+          // })
+          Alert.alert('Error!','Something went wrong!');
         }
         console.error('Error storing the value', error);
       }
@@ -114,7 +123,7 @@ const CreateAccount = ({ navigation }) => {
     <SafeAreaView className='flex-1'>
       {loading && <Loader text='Loading...' />}
       <View className='flex-1 p-4'>
-        <Text className='text-2xl font-bold mb-4'>ProPrep - Register</Text>
+        <Text className='text-2xl font-bold my-4'>ProPrep - Register</Text>
         <Text>Enter Your Details to Register</Text>
         <ScrollView className=''>
           <Input

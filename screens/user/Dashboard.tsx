@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image, Pressable, Modal, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, Image, Pressable, Modal, TouchableOpacity, Alert } from 'react-native'
 import getUserDetails from '../../customHooks/getUserDetails';
 import getUserCourses from '../../customHooks/getUserCourses';
 import getNetworkInfo from '../../customHooks/getNetworkInfo';
@@ -8,25 +8,51 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { courseCodes, serverUrl } from '../../constants/constants';
 
-
 const Dashboard = ({ navigation }) => {
   const [userDetails] = getUserDetails();
   const [userCourses] = getUserCourses();
   const [isConnected] = getNetworkInfo();
 
   const [shownLatestUpdate, latestUpdate] = getLatestUpdate();
-  
+
   const firstName = userDetails?.fullName?.split(' ')[0];
 
   const [isModalVisible, setIsModalVisible] = useState(shownLatestUpdate);
+  const [existingArray, setExistingArray] = useState([]);
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     setIsModalVisible(shownLatestUpdate);
   }, [shownLatestUpdate])
+
+  useEffect(() => {
+    (async()=>{
+      const existingArrayString = await AsyncStorage.getItem('@attemptedOfflineQuizzes');
+      existingArrayString ? setExistingArray(JSON.parse(existingArrayString)) : null ;
+
+      setTimeout(() => {
+        InitiateBackUp();
+      }, 5000);
+    })()
+  }, [])
+  // useEffect(()=>{
+  //   (async()=>{
+  //     let interstitialLoader: Notix.InterstitialLoader;
+
+  //     interstitialLoader = await Notix.Interstitial.createLoader(7194365);
+  //     interstitialLoader.startLoading();
+  //     let interstitialData;
+  //     try {
+  //       interstitialData = await interstitialLoader.next(5000);
+  //     } catch (e){
+  //       console.log('monetag error', e)
+  //     }
+  //     Notix.Interstitial.show(interstitialData)
+  //   })()
+  // }, [])
 
   const getRandomQuestions = (array, count) => {
     const shuffledArray = array.slice();
@@ -38,7 +64,6 @@ const Dashboard = ({ navigation }) => {
 
     return shuffledArray.slice(0, count);
   }
-
 
   const getQuizQuestions = async (course) => {
     try {
@@ -64,7 +89,7 @@ const Dashboard = ({ navigation }) => {
         navigation.navigate('Test', { courseCode: course.courseCode, questionDetails: getQuestions.data });
       }
     } catch (error) {
-      alert('Something went wrong!')
+      Alert.alert('Something went wrong!')
       console.log('Error getting quiz questions', error);
     }
   }
@@ -83,35 +108,39 @@ const Dashboard = ({ navigation }) => {
       },
     ],
   };
- 
-  // const getQuizQuestions = async (courseCode) => {
-    
-  //   try {
-  //     const numberOfQuestions = Number(await AsyncStorage.getItem('@questionsNumberValue')) || 15;
 
-  //     if (!isConnected) {
-  //       const allCoursesQuestions = JSON.parse(await AsyncStorage.getItem('@allCoursesQuestions'));
-  //       const quizQuestions = allCoursesQuestions[userDetails?.semester][courseCode];
-        
-  //       navigation.navigate('Test', { questionDetails: { questions: getRandomQuestions(quizQuestions, numberOfQuestions), startingTime: Date.now() } });
-  //       return;
-  //     }
-  //     let reqBody = {
-  //       level: userDetails?.level,
-  //       department: userDetails?.department,
-  //       semester: userDetails?.semester,
-  //       courseCode,
-  //       numberOfQuestions
-  //     };
-  //     console.log(reqBody);
-  //     const getQuestions: any = await axios.post(`${serverUrl}/api/testing_route/question/get_questions`, reqBody);
-  //     if (getQuestions.status == 200) {
-  //       navigation.navigate('Test', { questionDetails: getQuestions.data });        
-  //     }
-  //   } catch (error) {
-  //     console.log('Error getting quiz questions', error);
-  //   }
-  // }
+  const InitiateBackUp = async () => {
+    if (isConnected && existingArray.length > 0) {
+      Alert.alert(
+        'Attempted Questions',
+        'Found locally saved attepted questions, click OK to back them up',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              handleBackUp()
+              console.log('User confirmed');
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
+  const handleBackUp = async () => {
+    try {
+      existingArray.map(async(questionDetails)=>{
+        await axios.post(`${serverUrl}/api/testing_route/user/save_attempted_questions`, questionDetails);
+      })
+    } catch (error) {
+      console.log('Error getting quiz questions', error);
+    }
+  }
 
   return (
     <SafeAreaView className='p-5'>
@@ -120,7 +149,7 @@ const Dashboard = ({ navigation }) => {
         <View className="justify-end">
           <Text className="text-white">Welcome, {firstName}</Text>
           <Text className="text-white">Level: {userDetails?.level}</Text>
-          <Text className="text-white">Department: {userDetails?.department}</Text>
+          <Text className="text-white">Department: {userDetails?.department?.toUpperCase()}</Text>
         </View>
       </View>
       <View>

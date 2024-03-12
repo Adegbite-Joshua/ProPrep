@@ -1,7 +1,8 @@
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import React, { useLayoutEffect, useState } from 'react';
+import { AntDesign } from '@expo/vector-icons';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import { courseCodes } from '../../constants/constants';
+import * as Notix from 'notix-rn';
 
 // const questions = [
 //   {
@@ -88,6 +89,21 @@ const ReviewTest = ({ navigation, route }) => {
     setSelectedQuestions({});
   };
 
+    useEffect(()=>{
+    (async()=>{
+      let interstitialLoader: Notix.InterstitialLoader;
+
+      interstitialLoader = await Notix.Interstitial.createLoader(7194365);
+      interstitialLoader.startLoading();
+      let interstitialData;
+      try {
+        interstitialData = await interstitialLoader.next(5000);
+      } catch (e){
+        console.log('monetag error', e)
+      }
+      Notix.Interstitial.show(interstitialData)
+    })()
+  }, [])
   return (
     <SafeAreaView className='flex-1 p-5'>
       <Text className='text-2xl font-bold mb-4'>{courseCodes[questionDetails.courseCode]} Test Review</Text>
@@ -120,7 +136,7 @@ const ReviewTest = ({ navigation, route }) => {
         ))}
       </ScrollView>
       <Pressable className='flex py-2' onPress={() => navigation.navigate('Courses')}>
-        <Text className=' bg-red-400 p-2 text-white text-center'>Close</Text>
+        <Text className=' bg-red-500 rounded-md p-2 text-white text-center'>Close</Text>
       </Pressable>
       <Modal
         animationType="slide"
@@ -139,7 +155,7 @@ const ReviewTest = ({ navigation, route }) => {
               onPress={closeModal}
               className='mt-auto rounded'
             >
-              <Text className='bg-red-500 text-white p-2 text-center'>Close</Text>
+              <Text className='bg-purple-500 rounded-md text-white p-2 text-center'>Close</Text>
             </TouchableOpacity>
           </View>
         </View>

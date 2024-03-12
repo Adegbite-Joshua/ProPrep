@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 
-const getNetworkInfo = () => {
+const getLatestUpdate = () => {
     const dispatch = useDispatch();
     const [latestUpdate, setLatestUpdate] = useState({});
     let showLatestUpdate = useSelector((state: any)=>state.userDetails.showLatestUpdate)
@@ -29,5 +29,5 @@ const getNetworkInfo = () => {
     return [showLatestUpdate, latestUpdate]
 }
 
-export default getNetworkInfo;
+export default getLatestUpdate;
 

@@ -1,6 +1,6 @@
 // ForgotPasswordFlowScreen.js
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, Alert } from 'react-native';
 import Input from '../components/Forms/Input';
 import Toast from 'react-native-toast-message';
 import getNetworkInfo from '../customHooks/getNetworkInfo';
@@ -37,20 +37,12 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
 
   const handleNext = async () => {
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Something went wrong, try again!'
-      })
+      Alert.alert('Internet Connection!', 'Try connecting to the internet and try again!');
       return;
     }
     if (step === 'email') {
       if (email.trim() == '') {
-        Toast.show({
-          type: 'warning',
-          text1: 'Email required',
-          text2: 'Email field is required'
-        })
+        Alert.alert('Email required', 'Email field is required!');
         return;
       }
       try {
@@ -61,11 +53,7 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
           setStep('verificationCode');
         }
       } catch (error) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Invalid email address'
-        })
+        Alert.alert('Error', 'Invalid email address!');
         console.error('Error storing the value', error);
       }
     }
@@ -73,38 +61,24 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
       if (verificationCode == verificationCodeInput) {
         setStep('newPassword');
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Invalid token!'
-        })
+        Alert.alert('Error', 'Invalid token!');
       }
     }
     else if (step === 'newPassword') {
       if (newPassword != confirmPassword) {
-        Toast.show({
-          type: 'info',
-          text1: 'Mismatch',
-          text2: 'The passwords must be the same'
-        })
+        Alert.alert('Password mismatch', 'The passwords must be the same!');
         return;
       }
       try {
         const sendToken: any = await axios.post(`${serverUrl}/api/testing_route/user/reset_password`, { email, password: newPassword })
         if (sendToken.status == 200) {
           navigation.navigate('SignIn');
-          Toast.show({
-            type: 'success',
-            text1: 'Successful',
-            text2: 'Password updated successfully!'
-          })
+          Alert.alert('Successful', 'Password updated successfully!');
+
         }
       } catch (error) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Invalid email address'
-        })
+        Alert.alert('Error', 'Invalid email address');
+
         console.error('Error storing the value', error);
       }
     }
@@ -131,7 +105,7 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
           <Input
             label='Email'
             error={errors.email}
-            // placeholder='Email address'
+            placeholder='Email address'
             keyboardType="email-address"
             value={email}
             password={false}
@@ -152,6 +126,7 @@ const ForgotPasswordFlowScreen = ({ route, navigation }) => {
           <Input
             label='Input token'
             error={null}
+            placeholder='******'
             value={verificationCodeInput}
             password={false}
             iconName={null}

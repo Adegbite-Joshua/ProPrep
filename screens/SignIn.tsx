@@ -1,13 +1,12 @@
-// Import necessary components from React Native and Tailwind CSS
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard } from 'react-native';
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboard, Alert } from 'react-native';
 import Input from '../components/Forms/Input';
 import LevelSelection from '../components/Forms/LevelSelection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import { serverUrl } from '../constants/constants';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import getNetworkInfo from '../customHooks/getNetworkInfo';
 import ContactUsButton from '../components/ContactUsButton';
 
@@ -17,6 +16,37 @@ interface errorsProps {
   password?: string | null,
   level?: string | null,
 }
+
+const toastConfig = {
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: 'pink', opacity: 1, backgroundColor: 'green', position: 'absolute', elevation: 5, }}
+      contentContainerStyle={{ paddingHorizontal: 15, opacity: 1, elevation: 5, }}
+      activeOpacity = {1}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '400',
+        backgroundColor: 'green'
+      }}
+    />
+  ),
+ 
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      contentContainerStyle={{ paddingHorizontal: 15, opacity: 1, zIndex: 9999999, position: 'absolute' }}
+      activeOpacity = {1}
+      text1Style={{
+        fontSize: 17
+      }}
+      text2Style={{
+        fontSize: 15
+      }}
+    />
+  ),
+};
+
 
 // SignIn component
 const SignIn = ({ navigation }) => {
@@ -31,6 +61,7 @@ const SignIn = ({ navigation }) => {
   const [errors, setErrors] = useState<errorsProps>({});
   const [loading, setLoading] = useState<boolean>(false);
 
+
   const handleChange = (value: string, input: string) => {
     setFormData((prevStates) => ({ ...prevStates, [input]: value }))
   }
@@ -40,20 +71,12 @@ const SignIn = ({ navigation }) => {
   }
 
   const handleSignIn = async () => {
-    console.log('Form data submitted:', formData);
     Keyboard.dismiss();    
     if (!isConnected) {
-      Toast.show({
-        type: 'Error',
-        text1: 'Network error',
-        text2: 'Check your internet connection and try again'
-      })
+      Alert.alert('Internet Connection!', 'Try connecting to the internet and try again!');
       return;
     }
-//     navigation.navigate('BottomTabs', { screen: 'Dashboard' });
-// return;
     let validDetails = true;
-    // setTimeout(() => , 2000)
     if (!formData.email) {
       handleError('Input your email', 'email')
       validDetails = false;
@@ -65,6 +88,8 @@ const SignIn = ({ navigation }) => {
       handleError('Input your password', 'password')
       validDetails = false;
     }
+
+    
 
     if (validDetails) {
       try {
@@ -83,22 +108,27 @@ const SignIn = ({ navigation }) => {
         }
       } catch (error) {
         setLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Error signing you in!'
-        })
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Error',
+        //   text2: 'Error signing you in!'
+        // })
+        if(error.response.status == 400){
+          Alert.alert('Error!','Incorrect password!');
+        } else if(error.response.status == 404) {
+          Alert.alert('Error!','Invalid email address!');
+        }
         console.error('Error storing the value', error);
       }
     }
   };
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeAreaView className='flex-1 relative'>
       {loading && <Loader text='Loading...' />}
-      <Toast autoHide visibilityTime={3000} position='top' />
-      <View className='flex-1 p-5'>
-        <Text className='text-2xl font-bold mb-4'>Sign In</Text>
+      <Toast visibilityTime={3000} position='top'/>
+      <View className='flex-1 p-5' style={{zIndex: 99}}>
+        <Text className='text-2xl font-bold my-4'>Sign In</Text>
         <Text>Enter Your Details</Text>
         <ScrollView className=''>
           <Input

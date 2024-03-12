@@ -18,16 +18,14 @@ const getUserDetails = ():[userDetailsTypes] => {
 
     useEffect(() => {
         (async () => {
-            if (!userDetails.fullName) {
+            // if (!userDetails.fullName) {
                 const localUserDetails = JSON.parse(await AsyncStorage.getItem('@user'));
-                // const semester = await AsyncStorage.getItem('@semester') || 'firstSemester';
-                const semester = 'firstSemester';
+                const semester = await AsyncStorage.getItem('@semester') || 'firstSemester';
                 if (localUserDetails) {
-                    
                     // dispatch(updateUserDetails(localUserDetails));
                     setUserDetails({...localUserDetails, semester});
                 }
-            }
+            // }
         })();
     }, [])
 

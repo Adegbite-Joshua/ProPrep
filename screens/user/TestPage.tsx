@@ -18,29 +18,29 @@ const TestPage = ({navigation, route}) => {
       }
     );
 
-    const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'inactive' || nextAppState === 'background') {
+    // const handleAppStateChange = (nextAppState) => {
+    //   if (nextAppState === 'inactive' || nextAppState === 'background') {
 
-        Alert.alert(
-          'Warning',
-          'Minimizing the app is not allowed in this mode.',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                AppState.currentState = 'active';
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-      }
-    };
+    //     Alert.alert(
+    //       'Warning',
+    //       'Minimizing the app is not allowed in this mode.',
+    //       [
+    //         {
+    //           text: 'OK',
+    //           onPress: () => {
+    //             AppState.currentState = 'active';
+    //           },
+    //         },
+    //       ],
+    //       { cancelable: false }
+    //     );
+    //   }
+    // };
 
-    AppState.addEventListener('change', handleAppStateChange);
+    // AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
-      // (AppState as any).removeEventListener('change', handleAppStateChange);
+      // (AppState as any)?.removeEventListener('change', handleAppStateChange);
       backHandler.remove();
     };
 
