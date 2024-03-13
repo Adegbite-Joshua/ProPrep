@@ -150,8 +150,7 @@ const TestTaking = ({ navigation, questionDetails, courseCode }) => {
 
         existingArray.push(reqBody);
         await AsyncStorage.setItem('@attemptedOfflineQuizzes', JSON.stringify(existingArray));
-        Alert.alert('Error!','Quiz questions saved offline, you can synchronize it later');
-        
+        Alert.alert('Error!','Quiz questions saved offline, you can synchronize it later');        
       }
 
 

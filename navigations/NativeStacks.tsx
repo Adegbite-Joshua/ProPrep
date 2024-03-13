@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { View } from 'react-native'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Landing from '../screens/Landing';
 import CreateAccount from '../screens/CreateAccount';
@@ -20,32 +21,36 @@ const NativeStacks = () => {
 
   // const [initialRoute, setInitialRoute] = useState<string>('BottomTabs');
   const [initialRoute, setInitialRoute] = useState<string>('');
+  const [readyToRender, setReadyToRender] = useState<boolean>(false);
 
   useEffect(() => {
     const getInitialRoute = async () => {
       try {
         if (await AsyncStorage.getItem('@user')) {
-          setInitialRoute('BottomTabs');
-          console.log('BottomTabs')
+          setInitialRoute('BottomTabs');          
         } else if (await AsyncStorage.getItem('sign_in_before')) {
-          setInitialRoute('SignIn');
-          console.log('SignIn')
+          setInitialRoute('SignIn');          
         } else if (await AsyncStorage.getItem('created_an_account')) {
-          setInitialRoute('CreateAccount');
-          console.log('CreateAccount')
+          setInitialRoute('CreateAccount');          
+        } else {
+          setInitialRoute('Landing');
         }
       } catch (error) {
-        console.error('Error storing the value', error);
-        setInitialRoute('CreateAccount');
+        setInitialRoute('Landing');
+      } finally {
+        setReadyToRender(true)
       }
     };
 
     const fetchData = async () => {
       await getInitialRoute();
     };
-
     fetchData();
   }, []);  
+
+  if(!readyToRender) {
+    return <View></View>
+  }
 
   return (
     <Tab.Navigator initialRouteName={initialRoute} screenOptions={{

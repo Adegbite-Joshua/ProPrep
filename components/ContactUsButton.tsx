@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const ContactUsButton = ({navigation}) => {
-//   const  = useNavigation();
+  // const  = useNavigation();
+  const lastPosition = useRef({ x: 0, y: 0 });
 
   const useDraggableIcon = () => {
-    const position = new Animated.ValueXY({ x: 20, y: 20 });
+    const position = new Animated.ValueXY(lastPosition.current);
     const [isDragging, setIsDragging] = useState(false);
 
     const panResponder = PanResponder.create({
@@ -21,18 +22,12 @@ const ContactUsButton = ({navigation}) => {
           setIsDragging(true);
         }
         if (isDragging) {
-          position.setValue({ x: gesture.dx, y: gesture.dy });
+          position.setValue({ x: gesture.dx + lastPosition.current.x, y: gesture.dy + lastPosition.current.y });
         }
       },
       onPanResponderRelease: (_, gesture) => {
         if (isDragging) {
-          Animated.spring(position, {
-            toValue: { x: 0, y: 0 },
-            useNativeDriver: false,
-          }).start();
-        } else {
-          // Only navigate if it was a tap (not a drag)
-          navigation.navigate('Contact Us');
+          lastPosition.current = { x: gesture.dx + lastPosition.current.x, y: gesture.dy + lastPosition.current.y };
         }
         setIsDragging(false);
       },
@@ -53,8 +48,9 @@ const ContactUsButton = ({navigation}) => {
         borderRadius: 25,
         padding: 10,
         elevation: 5,
+        backgroundColor: 'purple',
+        zIndex: 99999999
       }}
-      className='bg-purple-500'
       {...panResponder.panHandlers}
     >
       <TouchableOpacity

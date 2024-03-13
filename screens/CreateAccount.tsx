@@ -49,11 +49,6 @@ const CreateAccount = ({ navigation }) => {
 
   const handleCreateAccount = async() => {
     Keyboard.dismiss();
-    // toast.success('Toast Message \n jkjjkf', {
-    //   duration: 3000,
-    //   hideOnPress: true
-    // })
-    // return;
     let validDetails = true;
     if (!formData.fullName) {
       handleError('Input your full name', 'fullName')
@@ -79,27 +74,29 @@ const CreateAccount = ({ navigation }) => {
       Alert.alert('Internet Connection!', 'Try connecting to the internet and try again!');
       return;
     }
-
+    console.log(formData)
     if (validDetails) {
       try {
         setLoading(true);
         await AsyncStorage.setItem('created_an_account', JSON.stringify({value: true}));
         const sendSignUp = await axios.post(`${serverUrl}/api/testing_route/user/create_account`, formData)
-        console.log(sendSignUp)
         if(sendSignUp.status == 201) {
           setLoading(false);
+          Alert.alert('Successfu!','Account created successfully');
           navigation.navigate('SignIn');
           // Toast.show({
           //   type: 'success',
           //   text1: 'Successful',
-          //   text2: 'Account created successfully'
+          //   text2: ''
           // })
+
         }
   
       } catch (error) {
         setLoading(false);
         if(error.response.status == 409){
           Alert.alert('Error!','User already exist with this email');
+          // navigation.navigate('SignIn');
           // Toast.show({
           //   type: 'error',
           //   text1: 'Error!',
